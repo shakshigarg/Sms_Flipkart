@@ -9,12 +9,14 @@ import com.flipcard.DAO.AuthCredentials;
 import com.flipcard.exception.AlreadyRegisteredException;
 import com.flipcard.exception.InvalidAuthenticationException;
 import com.flipcard.exception.InvalidCourseException;
+import com.flipcard.exception.NotRegisteredCourseException;
 import com.flipcard.model.Professor;
 import com.flipcard.model.Student;
 import com.flipcard.service.AuthenticationService;
 import com.flipcard.service.AuthenticationServiceInterface;
 import com.flipcard.service.StudentService;
 import com.flipcard.service.StudentServiceInterface;
+import com.flipcard.utils.DateTimeDay;
 
 public class Application {
 	private static Scanner sc= new Scanner(System.in);
@@ -39,7 +41,7 @@ public class Application {
 		}
 
 		logger.info("Login Success");
-		logger.info("welcome "+username);
+		logger.info(DateTimeDay.getDateTimeDay()+"  Welcome "+username);
 		
 		if(role.contentEquals("student")) {
 			
@@ -47,7 +49,13 @@ public class Application {
 			int val;
 			String courseName=null;
 			while(true) {
-				logger.info("\n1. Fetch Catalog Courses\n2. Add Course\n3. Drop Course\n4. Get Report Card\n5. Change Schedule\n6. exit");
+				logger.info("-----------Menu----------");
+				logger.info("1. Fetch Catalog Courses");
+				logger.info("2. Add Course");
+				logger.info("3. Drop Course");
+				logger.info("4. Get Report Card");
+				logger.info("5. Change Schedule");
+				logger.info("6. exit");
 				val=sc.nextInt();
 				switch(val) {
 				case 1:
@@ -61,6 +69,7 @@ public class Application {
 					courseName=sc.next();
 					try {
 						studentOperation.addCourse(courseName);
+					
 					} catch (InvalidCourseException e) {
 						// TODO Auto-generated catch block
 						logger.info(e.getMessage());
@@ -71,28 +80,26 @@ public class Application {
 					
 				case 3:
 					logger.info("\nBelow are the courses in which you have registered\n");
-//					studentOperation.fetchRegisteredCourses();
-					logger.info("Enter the course Name you want to add");
+					studentOperation.fetchRegisteredCourses();
+					logger.info("Enter the course Name you want to Drop");
 					courseName=sc.next();
 					try {
-						studentOperation.addCourse(courseName);
+						studentOperation.dropCourse(courseName);
 					} catch (InvalidCourseException e) {
 						// TODO Auto-generated catch block
 						logger.info(e.getMessage());
-					} catch(AlreadyRegisteredException e) {
+					} catch (NotRegisteredCourseException e) {
+						// TODO Auto-generated catch block
 						logger.info(e.getMessage());
 					}
 					continue;
 					
 					
-				case 4:
-					
-					
+				case 4:			
 				case 5:
-					
-					
 				case 6:
-					
+					logger.info("Logout Successfull! GOODBYE!");
+					return;
 				
 
 			}
