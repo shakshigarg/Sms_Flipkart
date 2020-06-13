@@ -1,6 +1,8 @@
 package com.flipcard.service;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -50,7 +52,6 @@ public class StudentService implements StudentServiceInterface {
 			
 		boolean valid=courseUpdateObject.verifyCourse(courseName);
 		if(valid) {
-//			boolean added=true;
 			boolean added=courseUpdateObject.addCourse(username,courseName);
 			if(added) {
 				logger.info("Course Added Successfully on "+DateTimeDay.getDateTime());
@@ -81,7 +82,6 @@ public class StudentService implements StudentServiceInterface {
 	public void dropCourse(String courseName) throws NotRegisteredCourseException, InvalidCourseException {
 		boolean valid=courseUpdateObject.verifyCourse(courseName);
 		if(valid) {
-//			boolean added=true;
 			boolean dropped=courseUpdateObject.dropCourse(username,courseName);
 			if(dropped) {
 				logger.info("Course dropped Successfully on "+DateTimeDay.getDateTime());
@@ -95,6 +95,30 @@ public class StudentService implements StudentServiceInterface {
 			throw new InvalidCourseException("Course Not Available");
 		}
 		
+	}
+
+
+	@Override
+	public void getGrades(String courseName){
+				
+	}
+
+
+	@Override
+	public void getReportCard() {
+		HashMap<String,String> report_card=new HashMap<String,String>();
+		report_card=courseUpdateObject.fetchReportCard(username);		
+		int entries=report_card.size();
+		if(entries==0) {
+			logger.info("You are not registered for any course");
+		}
+		report_card.forEach((course,grade)->{
+			 if(!grade.contentEquals("")) 
+				 System.out.println(course+"                   "+grade);  
+			 else 
+				 System.out.println(course+"          "+"Grades not recorded by Professor");  		
+		 });
+			
 	}
 
 

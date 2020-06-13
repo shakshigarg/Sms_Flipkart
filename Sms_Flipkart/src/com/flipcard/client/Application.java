@@ -11,8 +11,7 @@ import com.flipcard.exception.CourseAlreadyTaughtException;
 import com.flipcard.exception.InvalidAuthenticationException;
 import com.flipcard.exception.InvalidCourseException;
 import com.flipcard.exception.NotRegisteredCourseException;
-
-
+import com.flipcard.exception.StudentNotRegisteredException;
 import com.flipcard.service.AuthenticationService;
 import com.flipcard.service.ProfessorService;
 import com.flipcard.service.ProfessorServiceInterface;
@@ -22,8 +21,6 @@ import com.flipcard.utils.DateTimeDay;
 
 public class Application {
 	private static Scanner sc= new Scanner(System.in);
-	//	private static AuthenticationServiceInterface authServiceObject=new AuthenticationService();
-
 	private static Logger logger = Logger.getLogger(Application.class);
 
 
@@ -56,8 +53,7 @@ public class Application {
 				logger.info("2. Add Course");
 				logger.info("3. Drop Course");
 				logger.info("4. Get Report Card");
-				logger.info("5. Change Schedule");
-				logger.info("6. Logout");
+				logger.info("5. Logout");
 				val=sc.nextInt();
 				switch(val) {
 				case 1:
@@ -95,9 +91,10 @@ public class Application {
 						logger.info(e.getMessage());
 					}
 					continue;			
-				case 4:			
+				case 4:	
+					studentOperation.getReportCard();					
+					continue;
 				case 5:
-				case 6:
 					logger.info("Logout Successfull! GOODBYE!");
 					return;
 
@@ -122,7 +119,25 @@ public class Application {
 				val=sc.nextInt();
 				switch(val) {
 				case 1:
-					professorOperation.recordGrades();
+					logger.info("\nBelow are courses that you teach\n");
+					professorOperation.fetchTaughtCourseNames();
+					logger.info("Enter the course Name for which you want to add student grades");
+					courseName=sc.next();
+					logger.info("Below are the students registered for this course");
+					try {
+						professorOperation.getStudentInfo(courseName);
+					} catch (InvalidCourseException e) {
+						logger.info(e.getMessage());
+						continue;
+					}
+					logger.info("Enter the student Name and grades");
+					String studentName=sc.next();
+					String grades=sc.next();
+					try {
+						professorOperation.recordGrades(courseName,studentName,grades);
+					} catch (StudentNotRegisteredException e) {
+						logger.info(e.getMessage());
+					}
 					continue;
 				case 2:
 					professorOperation.getAllStudents();

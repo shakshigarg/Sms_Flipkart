@@ -7,11 +7,13 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.flipcard.constants.SqlQueries;
+import com.flipcard.model.Course;
 import com.flipcard.model.Student;
 import com.flipcard.utils.DBUtils;
 import com.flipcard.utils.DateTimeDay;
@@ -245,5 +247,59 @@ public class CourseUpdation implements CourseUpdationInterface {
 				return null;
 		
 	}
-	
+
+	@Override
+	public String recordGrades(String courseName, String username, String grades) {
+		conn = DBUtils.getConnection();
+
+		try {
+			stmt = conn.prepareStatement(SqlQueries.RECORD_GRADES);
+			System.out.println(grades+courseName+username);
+			stmt.setString(1,grades);
+			stmt.setString(2,courseName);
+			stmt.setString(3,username);
+			int rows = stmt.executeUpdate();	
+			if(rows!=0)
+			{
+				return "added";
+			}
+			else {
+				return "Student not registered for course.";
+			}
+		}
+		catch(Exception e){
+			logger.error("Error occured "+e.getMessage());
+
+		}
+		return null;
+	}
+
+	@Override
+	public HashMap<String, String> fetchReportCard(String username) {
+		// Establish connection 
+		conn = DBUtils.getConnection();
+
+		try {
+			
+			stmt = conn.prepareStatement(SqlQueries.GET_REPORT_CARD);
+			stmt.setString(1,username);
+			ResultSet rs = stmt.executeQuery();
+
+			HashMap<String,String> report_card=new HashMap<String,String>();	
+
+			//STEP 5: Extract data from result set
+			while(rs.next()){
+				//Retrieve by column name				
+				report_card.put(rs.getString("courseName"),rs.getString("grades"));
+			}
+			return report_card;
+			
+		}
+		catch(Exception e){
+			logger.error("Error occured "+e.getMessage());
+			
+		}
+		return null;
+	}
+
 }

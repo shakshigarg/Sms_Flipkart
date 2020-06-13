@@ -11,6 +11,7 @@ import com.flipcard.DAO.CourseUpdationInterface;
 import com.flipcard.client.Application;
 import com.flipcard.exception.CourseAlreadyTaughtException;
 import com.flipcard.exception.InvalidCourseException;
+import com.flipcard.exception.StudentNotRegisteredException;
 import com.flipcard.model.Student;
 import com.flipcard.utils.DateTimeDay;
 
@@ -27,8 +28,15 @@ public class ProfessorService implements ProfessorServiceInterface {
 
 
 	@Override
-	public void recordGrades() {
-		
+	public void recordGrades(String courseName,String studentName,String grades) throws StudentNotRegisteredException {
+		String message=courseUpdateObject.recordGrades(courseName,studentName,grades);
+		if(message.contentEquals("added")) {
+			logger.info("Grades Added Successfully on "+DateTimeDay.getDateTime());
+			return;
+		}
+		else {
+			throw new StudentNotRegisteredException(message);
+		}
 		
 	}
 
@@ -93,18 +101,19 @@ public class ProfessorService implements ProfessorServiceInterface {
 	public void getAllStudents() {
 		List<Student> students = new ArrayList<Student>();
 		students=courseUpdateObject.getAllStudents();
+		
+		
+		// Stream API used to filter female students 		
 		students
 		 .stream()
-		 .filter(student -> student.getGender().contentEquals("Female"))
-		 .forEach(student->System.out.println("Ms. "+student.getUserName()));
+		 .forEach(student->{
+			 if(student.getGender().contentEquals("Female")) 
+			 System.out.println("Ms. "+student.getUserName());
+			 else 
+			 System.out.println("Mr. "+student.getUserName());			
+		 });
 		
-		students
-		 .stream()
-		 .filter(student -> student.getGender().contentEquals("Male"))
-		 .forEach(student->System.out.println("Mr. "+student.getUserName()));
-		
-		
-		//courses.forEach(course->System.out.println("\n Course Name: "+course.getCourseName()+"\n Number of students: "+course.getNumberOfStudents()+"\n Professor Name: "+course.getProfessorName()+"\n Fee "+course.getFee()+"\n Subject "+course.getSubject()+"\n\n"));
+	
 		
 	}
 	

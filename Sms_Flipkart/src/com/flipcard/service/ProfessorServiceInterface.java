@@ -2,10 +2,11 @@ package com.flipcard.service;
 
 import com.flipcard.exception.CourseAlreadyTaughtException;
 import com.flipcard.exception.InvalidCourseException;
+import com.flipcard.exception.StudentNotRegisteredException;
 
 public interface ProfessorServiceInterface {
 
-	public void recordGrades();
+	public void recordGrades(String courseName, String studentName, String grades) throws StudentNotRegisteredException;
 
 	public void fetchCourseNames();
 

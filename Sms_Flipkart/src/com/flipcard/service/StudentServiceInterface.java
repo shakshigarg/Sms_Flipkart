@@ -10,4 +10,6 @@ public interface StudentServiceInterface {
 	void addCourse(String courseName) throws InvalidCourseException, AlreadyRegisteredException;
 	public void fetchRegisteredCourses();
 	public void dropCourse(String courseName) throws InvalidCourseException, NotRegisteredCourseException;
+	public void getGrades(String courseName);
+	public void getReportCard();
 }
