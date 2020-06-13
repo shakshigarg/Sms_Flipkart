@@ -6,6 +6,13 @@ public class Student {
 	private String phoneNumber;
 	private String address;
 	private int scholarshipId;
+	private String gender;
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 	/**
 	 * @return the userName
 	 */

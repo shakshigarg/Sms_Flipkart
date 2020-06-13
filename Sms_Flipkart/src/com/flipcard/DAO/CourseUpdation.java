@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.flipcard.constants.SqlQueries;
+import com.flipcard.model.Student;
 import com.flipcard.utils.DBUtils;
 import com.flipcard.utils.DateTimeDay;
 
@@ -50,18 +51,15 @@ public class CourseUpdation implements CourseUpdationInterface {
 
 	@Override
 	public boolean addCourse(String username,String courseName) {
-		conn = DBUtils.getConnection();
-		LocalDate localDate = LocalDate.now();
-		LocalTime localTime = LocalTime.now();
-		String dateTime=localDate+" "+localTime;
-		
+		conn = DBUtils.getConnection();		
 		
 		try {
 			stmt = conn.prepareStatement(SqlQueries.ADD_NEW_COURSE);
 			 
 			stmt.setString(1,username);
 			stmt.setString(2, courseName);
-			stmt.setString(3,dateTime);
+			stmt.setString(3,DateTimeDay.getDateTime());
+			stmt.setString(4,"");
 			int rows = stmt.executeUpdate();
 			
 			return true;
@@ -71,6 +69,7 @@ public class CourseUpdation implements CourseUpdationInterface {
 		}
 		catch(Exception e){
 			logger.error("Error occured "+e.getMessage());
+			e.printStackTrace();
 			
 		}
 		return false;
@@ -128,6 +127,123 @@ public class CourseUpdation implements CourseUpdationInterface {
 			
 		}
 		return false;
+	}
+
+	@Override
+	public String addCourseToTeach(String username, String courseName) {
+		conn = DBUtils.getConnection();
+		
+		try {
+			stmt = conn.prepareStatement(SqlQueries.ADD_COURSE_TO_TEACH);
+			 
+			stmt.setString(1,username);
+			stmt.setString(2, courseName);
+			stmt.setString(3,"");
+			int rows = stmt.executeUpdate();	
+			if(rows!=0)
+			{
+				System.out.println("added actually");
+				return "added";
+			}
+			else {
+				return "Course already being taught";
+			}
+		}
+		catch(Exception e){
+			logger.error("Error occured "+e.getMessage());
+			
+		}
+		return null;
+	}
+
+	@Override
+	public List<String> fetchTaughtCoursesName(String username) {
+		// Establish connection 
+				conn = DBUtils.getConnection();
+
+				try {
+					stmt = conn.prepareStatement(SqlQueries.GET_TAUGHT_COURSE_NAMES);
+					stmt.setString(1,username);
+					ResultSet rs = stmt.executeQuery();
+
+					List<String> courseNames = new ArrayList<String>();
+
+					//STEP 5: Extract data from result set
+					while(rs.next()){
+						//Retrieve by column name
+						
+						courseNames.add(rs.getString("courseName"));
+					}
+					return courseNames;
+					
+				}
+				catch(Exception e){
+					logger.error("Error occured "+e.getMessage());
+					
+				}
+				return null;
+	}
+
+	@Override
+	public List<String> fetchStudentsName(String courseName) {
+		// Establish connection 
+		conn = DBUtils.getConnection();
+
+		try {
+			stmt = conn.prepareStatement(SqlQueries.GET_STUDENTS_NAME);
+			stmt.setString(1,courseName);
+			ResultSet rs = stmt.executeQuery();
+
+			List<String> studentNames = new ArrayList<String>();
+
+			//STEP 5: Extract data from result set
+			while(rs.next()){
+				//Retrieve by column name
+				
+				studentNames.add(rs.getString("username"));
+			}
+			return studentNames;
+			
+		}
+		catch(Exception e){
+			logger.error("Error occured "+e.getMessage());
+			
+		}
+		return null;
+	}
+
+	@Override
+	public List<Student> getAllStudents() {
+		// Establish connection 
+				conn = DBUtils.getConnection();
+
+				try {
+					stmt = conn.prepareStatement(SqlQueries.GET_ALL_STUDENTS);
+					ResultSet rs = stmt.executeQuery();
+
+					List<Student> students = new ArrayList<Student>();
+
+					//STEP 5: Extract data from result set
+					while(rs.next()){
+						//Retrieve by column name
+						Student s=new Student();
+						s.setUserName(rs.getString("username"));
+						s.setAddress(rs.getString("address"));
+						s.setGender(rs.getString("gender"));
+						s.setNumberOfCourses(rs.getInt("numberofcourses"));
+						s.setPhoneNumber(rs.getString("phonenumber"));
+						s.setScholarshipId(rs.getInt("scholarshipid"));
+						students.add(s);
+					}
+					return students;
+					
+				}
+				catch(Exception e){
+					logger.error("Error occured "+e.getMessage());
+					
+				}
+				return null;
+		
 	}
 	
 }

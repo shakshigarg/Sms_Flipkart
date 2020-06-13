@@ -1,7 +1,4 @@
 package com.flipcard.service;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +9,6 @@ import com.flipcard.DAO.CourseUpdation;
 import com.flipcard.DAO.CourseUpdationInterface;
 import com.flipcard.client.Application;
 import com.flipcard.exception.AlreadyRegisteredException;
-import com.flipcard.exception.InvalidAuthenticationException;
 import com.flipcard.exception.InvalidCourseException;
 import com.flipcard.exception.NotRegisteredCourseException;
 import com.flipcard.model.Course;
