@@ -207,6 +207,8 @@ public class Application {
 				logger.info("3. Create Admin");
 				logger.info("4. Delete Student/Professor");
 				logger.info("5. Delete Self Account");
+				logger.info("6. Add a course");
+				logger.info("7. Update a course");
 				logger.info("6. Logout");
 				val=sc.nextInt();
 				switch(val) {
