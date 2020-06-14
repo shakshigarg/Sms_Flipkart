@@ -107,7 +107,8 @@ public class Application {
 					continue;
 				case 5:
 					AuthenticationService.logout();
-					logger.info("Logout Successfull! GOODBYE!");
+					logger.info("Logout Successfull on"+DateTimeDay.getDateTimeDay());
+					logger.info("GOODBYE!");
 					return;
 
 
@@ -185,7 +186,8 @@ public class Application {
 					continue;			
 				case 5:
 					AuthenticationService.logout();
-					logger.info("Logout Successfull! GOODBYE!");
+					logger.info("Logout Successfull on"+DateTimeDay.getDateTimeDay());
+					logger.info("GOODBYE!");
 					return;
 
 
@@ -351,7 +353,8 @@ public class Application {
 
 				case 8:
 				AuthenticationService.logout();
-				logger.info("Logout Successfull! GOODBYE!");
+				logger.info("Logout Successfull on"+DateTimeDay.getDateTimeDay());
+				logger.info("GOODBYE!");
 				return;	
 
 
