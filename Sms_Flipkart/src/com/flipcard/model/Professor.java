@@ -4,8 +4,15 @@ public class Professor {
 	private String userName;
 	private String phoneNumber;
 	private String address;
-	private String noOfCourses;
+	private int numberOfCourses;
 	private int fee;
+	private String gender;
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 	/**
 	 * @return the userName
 	 */
@@ -42,17 +49,11 @@ public class Professor {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	/**
-	 * @return the noOfCourses
-	 */
-	public String getNoOfCourses() {
-		return noOfCourses;
+	public int getNumberOfCourses() {
+		return numberOfCourses;
 	}
-	/**
-	 * @param noOfCourses the noOfCourses to set
-	 */
-	public void setNoOfCourses(String noOfCourses) {
-		this.noOfCourses = noOfCourses;
+	public void setNumberOfCourses(int i) {
+		this.numberOfCourses = i;
 	}
 	/**
 	 * @return the fee

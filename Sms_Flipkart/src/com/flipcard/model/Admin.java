@@ -4,6 +4,7 @@ public class Admin {
 	private String userName;
 	private String phoneNumber;
 	private String address;
+	private String gender;
 	/**
 	 * @return the userName
 	 */
@@ -15,6 +16,12 @@ public class Admin {
 	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	/**
 	 * @return the phoneNumber

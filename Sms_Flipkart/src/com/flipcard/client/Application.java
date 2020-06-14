@@ -11,7 +11,13 @@ import com.flipcard.exception.CourseAlreadyTaughtException;
 import com.flipcard.exception.InvalidAuthenticationException;
 import com.flipcard.exception.InvalidCourseException;
 import com.flipcard.exception.NotRegisteredCourseException;
+import com.flipcard.exception.UserAlreadyExist;
 import com.flipcard.exception.StudentNotRegisteredException;
+import com.flipcard.model.Admin;
+import com.flipcard.model.Professor;
+import com.flipcard.model.Student;
+import com.flipcard.service.AdminService;
+import com.flipcard.service.AdminServiceInterface;
 import com.flipcard.service.AuthenticationService;
 import com.flipcard.service.ProfessorService;
 import com.flipcard.service.ProfessorServiceInterface;
@@ -104,8 +110,8 @@ public class Application {
 			}
 		}
 		if(role.contentEquals("professor")) {
-			
-			
+
+
 			ProfessorServiceInterface professorOperation=new ProfessorService(username);
 			int val;
 			String courseName=null;
@@ -179,16 +185,112 @@ public class Application {
 				}
 
 			}
-			
-			
-			
 
-			
+
+
+
+
 
 		}
 
-		if(role.contentEquals("Admin")) {	
-			logger.info("\n1. Create Student\n2. Drop Student\n3. Create Professor\n4. Drop Professor\n5. Add Admin 6. Drop Admin 7.exit ");
+		if(role.contentEquals("admin")) {	
+			AdminServiceInterface adminOperation=new AdminService(username);
+			int val;
+			while(true) {
+				logger.info("-----------Menu----------");
+				logger.info("1. Create Student");
+				logger.info("2. Delete Student");
+				logger.info("3. Create professor");
+				logger.info("4. Delete Professor");
+				logger.info("5. Create Admin");
+				logger.info("6. Delete Self Account");
+				logger.info("7. Logout");
+				val=sc.nextInt();
+				switch(val) {
+				case 1:
+					logger.info("Enter details to create student");
+					Student s=new Student();	
+					try {
+						logger.info("Create username: ");
+						s.setUserName(sc.next());
+						adminOperation.checkUsername(s.getUserName());
+						logger.info("Create password: ");
+						password=sc.next();
+						logger.info("Enter the Gender: ");
+						s.setGender(sc.next());
+						logger.info("Enter the Address ");
+						s.setAddress(sc.next());
+						logger.info("Enter the phone number ");
+						s.setPhoneNumber(sc.next());
+						logger.info("Enter the Shcolarship Id ,if not available enter -1");
+						s.setScholarshipId(sc.nextInt());
+						s.setNumberOfCourses(0);
+						adminOperation.createStudent(s,password);
+					} catch (UserAlreadyExist e) {
+						logger.info(e.getMessage());
+					}
+					continue;
+				case 2:
+
+					continue;
+				case 3:
+					logger.info("Enter details to create Professor");
+					Professor p=new Professor();
+					try {
+						logger.info("Create username: ");
+						p.setUserName(sc.next());
+						adminOperation.checkUsername(p.getUserName());
+						logger.info("Create password: ");
+						password=sc.next();
+						logger.info("Enter the Gender: ");
+						p.setGender(sc.next());
+						logger.info("Enter the Address ");
+						p.setAddress(sc.next());
+						logger.info("Enter the phone number ");
+						p.setPhoneNumber(sc.next());
+						p.setNumberOfCourses(0);
+						adminOperation.createProfessor(p,password);
+					}catch (UserAlreadyExist e) {
+						logger.info(e.getMessage());
+					}
+					continue;
+
+				case 4:
+
+					continue;			
+				case 5:
+					logger.info("Enter details to create Admin");
+					Admin a=new Admin();
+					try {
+						logger.info("Create username: ");
+						a.setUserName(sc.next());
+						adminOperation.checkUsername(a.getUserName());
+						logger.info("Create password: ");
+						password=sc.next();
+						logger.info("Enter the Gender: ");
+						a.setGender(sc.next());
+						logger.info("Enter the Address ");
+						a.setAddress(sc.next());
+						logger.info("Enter the phone number ");
+						a.setPhoneNumber(sc.next());
+						adminOperation.createAdmin(a,password);
+					}
+					catch (UserAlreadyExist e) {
+						logger.info(e.getMessage());
+					}
+					continue;
+				case 6:
+
+					continue;	
+					
+				case 7:
+					logger.info("Logout Successfull! GOODBYE!");
+					return;	
+
+
+				}
+
+			}
 
 		}
 
