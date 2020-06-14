@@ -3,7 +3,10 @@ package com.flipcard.DAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -23,13 +26,13 @@ public class AdminDao implements AdminDaoInterface {
 		conn = DBUtils.getConnection();		
 
 		try {
-			
+
 			stmt = conn.prepareStatement(SqlQueries.ADD_USER_CREDENTIALS);
 			stmt.setString(1,s.getUserName());
 			stmt.setString(2,password);
 			stmt.setString(3,"student");
 			stmt.executeUpdate();
-			
+
 			stmt = conn.prepareStatement(SqlQueries.ADD_STUDENT_INFO);
 			stmt.setString(1,s.getUserName());
 			stmt.setInt(2,s.getNumberOfCourses());
@@ -38,27 +41,27 @@ public class AdminDao implements AdminDaoInterface {
 			stmt.setInt(5,s.getScholarshipId());
 			stmt.setString(6,s.getGender());
 			stmt.executeUpdate();
-			
+
 		}
 		catch(Exception e){
 			logger.error("Error occured "+e.getMessage());
 
 		}
-		
-		
+
+
 	}
 	@Override
 	public void createProfessor(Professor p, String password) {
 		conn = DBUtils.getConnection();		
 
 		try {
-			
+
 			stmt = conn.prepareStatement(SqlQueries.ADD_USER_CREDENTIALS);
 			stmt.setString(1,p.getUserName());
 			stmt.setString(2,password);
 			stmt.setString(3,"professor");
 			stmt.executeUpdate();
-			
+
 			stmt = conn.prepareStatement(SqlQueries.ADD_PROFESSOR_INFO);
 			stmt.setString(1,p.getUserName());
 			stmt.setString(2,p.getPhoneNumber());
@@ -66,53 +69,53 @@ public class AdminDao implements AdminDaoInterface {
 			stmt.setInt(4,p.getNumberOfCourses());
 			stmt.setString(5,p.getGender());
 			stmt.executeUpdate();
-			
+
 		}
 		catch(Exception e){
 			logger.error("Error occured "+e.getMessage());
 
 		}
-		
-		
+
+
 	}
 	@Override
 	public void createAdmin(Admin a, String password) {
 		conn = DBUtils.getConnection();		
 
 		try {
-			
+
 			stmt = conn.prepareStatement(SqlQueries.ADD_USER_CREDENTIALS);
 			stmt.setString(1,a.getUserName());
 			stmt.setString(2,password);
 			stmt.setString(3,"admin");
 			stmt.executeUpdate();
-			
+
 			stmt = conn.prepareStatement(SqlQueries.ADD_ADMIN_INFO);
 			stmt.setString(1,a.getUserName());
 			stmt.setString(2,a.getPhoneNumber());
 			stmt.setString(3,a.getAddress());
 			stmt.setString(4,a.getGender());
 			stmt.executeUpdate();
-			
+
 		}
 		catch(Exception e){
 			logger.error("Error occured "+e.getMessage());
 
 		}
-		
-		
+
+
 	}
 	@Override
 	public boolean checkUsername(String userName) {
 		conn = DBUtils.getConnection();		
 
 		try {
-			
+
 			stmt = conn.prepareStatement(SqlQueries.CHECK_USERNAME);
 			stmt.setString(1,userName);
 			ResultSet rs=stmt.executeQuery();
 			if(rs.next())
-			return true;
+				return true;
 			else {
 				return false;
 			}
@@ -121,8 +124,90 @@ public class AdminDao implements AdminDaoInterface {
 			logger.error("Error occured "+e.getMessage());
 
 		}
-		
+
 		return false;
+	}
+	@Override
+	public List<String> getUsersWithRole(String role) {
+		// Establish connection 
+		conn = DBUtils.getConnection();
+
+		try {
+			stmt = conn.prepareStatement(SqlQueries.GET_USERS_WITH_ROLE);
+			stmt.setString(1, role);
+			ResultSet rs = stmt.executeQuery();
+
+			List<String> userNames = new ArrayList<String>();
+
+			//STEP 5: Extract data from result set
+			while(rs.next()){
+				//Retrieve by column name
+
+				userNames.add(rs.getString("userName"));
+			}
+			return userNames;
+
+		}
+		catch(Exception e){
+			logger.error("Error occured "+e.getMessage());
+
+		}
+		return null;
+	}
+	@Override
+	public boolean deleteUser(String username, String role) {
+		conn = DBUtils.getConnection();		
+
+		try {
+
+			stmt = conn.prepareStatement(SqlQueries.DELETE_USER_WITH_ROLE);
+			stmt.setString(1,username);
+			stmt.setString(2,role);
+			int rows=stmt.executeUpdate();
+			if(rows==0) {
+				return false;
+			}
+			if(role.contentEquals("Student")||role.contentEquals("student"))
+			{
+				stmt = conn.prepareStatement(SqlQueries.DELETE_STUDENT_INFO);
+				stmt.setString(1,username);
+				stmt.executeUpdate();
+				stmt = conn.prepareStatement(SqlQueries.DELETE_STUDENT_COURSES);
+				stmt.setString(1,username);
+				stmt.executeUpdate();
+			}
+			else {
+				stmt = conn.prepareStatement(SqlQueries.DELETE_PROFESSOR_INFO);
+				stmt.setString(1,username);
+				stmt.executeUpdate();
+				stmt = conn.prepareStatement(SqlQueries.RESET_PROFESSOR_COURSES);
+				stmt.setString(1,username);
+				stmt.executeUpdate();
+			}
+			return true;
+
+		}
+		catch(Exception e){
+			logger.error("Error occured "+e.getMessage());
+
+		}
+		return false;
+	}
+	@Override
+	public void deleteSelfAccount(String username) {
+		conn = DBUtils.getConnection();		
+		try {
+			stmt = conn.prepareStatement(SqlQueries.DELETE_USER_WITH_ROLE);
+			stmt.setString(1,username);
+			stmt.setString(2,"admin");
+			stmt.executeUpdate();
+			stmt = conn.prepareStatement(SqlQueries.DELETE_ADMIN_INFO);
+			stmt.setString(1,username);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			logger.error("Error occured "+e.getMessage());
+		}
+	
 	}
 
 }

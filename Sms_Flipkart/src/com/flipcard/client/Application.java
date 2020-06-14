@@ -10,8 +10,10 @@ import com.flipcard.exception.AlreadyRegisteredException;
 import com.flipcard.exception.CourseAlreadyTaughtException;
 import com.flipcard.exception.InvalidAuthenticationException;
 import com.flipcard.exception.InvalidCourseException;
+import com.flipcard.exception.InvalidRoleInput;
 import com.flipcard.exception.NotRegisteredCourseException;
 import com.flipcard.exception.UserAlreadyExist;
+import com.flipcard.exception.UserNotExistForRole;
 import com.flipcard.exception.StudentNotRegisteredException;
 import com.flipcard.model.Admin;
 import com.flipcard.model.Professor;
@@ -199,12 +201,11 @@ public class Application {
 			while(true) {
 				logger.info("-----------Menu----------");
 				logger.info("1. Create Student");
-				logger.info("2. Delete Student");
-				logger.info("3. Create professor");
-				logger.info("4. Delete Professor");
-				logger.info("5. Create Admin");
-				logger.info("6. Delete Self Account");
-				logger.info("7. Logout");
+				logger.info("2. Create professor");
+				logger.info("3. Create Admin");
+				logger.info("4. Delete Student/Professor");
+				logger.info("5. Delete Self Account");
+				logger.info("6. Logout");
 				val=sc.nextInt();
 				switch(val) {
 				case 1:
@@ -231,9 +232,6 @@ public class Application {
 					}
 					continue;
 				case 2:
-
-					continue;
-				case 3:
 					logger.info("Enter details to create Professor");
 					Professor p=new Professor();
 					try {
@@ -253,12 +251,8 @@ public class Application {
 					}catch (UserAlreadyExist e) {
 						logger.info(e.getMessage());
 					}
-					continue;
-
-				case 4:
-
 					continue;			
-				case 5:
+				case 3:
 					logger.info("Enter details to create Admin");
 					Admin a=new Admin();
 					try {
@@ -279,11 +273,33 @@ public class Application {
 						logger.info(e.getMessage());
 					}
 					continue;
+				case 4:
+					try {
+					logger.info("Delete Student/Professor?");
+					role=sc.next();
+					adminOperation.getUsersWithRole(role);
+					logger.info("Enter the username of "+role+" you want to delete");
+					username=sc.next();
+					adminOperation.deleteUser(username,role);
+					} catch (UserNotExistForRole e) {
+						logger.info(e.getMessage());
+					} catch (InvalidRoleInput e) {
+						logger.info(e.getMessage());
+					} 
+					continue;
+				case 5:
+						logger.info("You surely want to delete your account? Enter yes/no");
+						String ans=sc.next();
+						if(ans.contentEquals("yes")||ans.contentEquals("Yes")) {
+							adminOperation.deleteSelfAccount();
+							logger.info("GOODBYE!");
+							return;
+						}
+						else {
+							logger.info("Cannot delete account without your consent!");
+							continue;
+						}					
 				case 6:
-
-					continue;	
-					
-				case 7:
 					logger.info("Logout Successfull! GOODBYE!");
 					return;	
 
