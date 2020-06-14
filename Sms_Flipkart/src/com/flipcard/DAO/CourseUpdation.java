@@ -162,7 +162,9 @@ public class CourseUpdation implements CourseUpdationInterface {
 			int rows = stmt.executeUpdate();	
 			if(rows!=0)
 			{
-				System.out.println("added actually");
+				stmt = conn.prepareStatement(SqlQueries.INCREASE_COUNT_OF_PROFESSOR_COURSES);
+				stmt.setString(1, username);
+				stmt.executeUpdate();
 				return "added";
 			}
 			else {
