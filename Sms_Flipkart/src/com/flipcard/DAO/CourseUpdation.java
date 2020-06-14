@@ -68,6 +68,10 @@ public class CourseUpdation implements CourseUpdationInterface {
 			stmt.setString(1, courseName);
 			stmt.executeUpdate();
 			
+			stmt = conn.prepareStatement(SqlQueries.INCREASE_COUNT_OF_COURSES);
+			stmt.setString(1, username);
+			stmt.executeUpdate();
+			
 			return true;
 		}
 		catch(SQLIntegrityConstraintViolationException error) {
@@ -127,6 +131,11 @@ public class CourseUpdation implements CourseUpdationInterface {
 				stmt = conn.prepareStatement(SqlQueries.DECREASE_COUNT_OF_STUDENTS);
 				stmt.setString(1, courseName);
 				stmt.executeUpdate();
+				
+				stmt = conn.prepareStatement(SqlQueries.DECREASE_COUNT_OF_COURSES);
+				stmt.setString(1, username);
+				stmt.executeUpdate();
+				
 				return true;
 			}
 		}
