@@ -3,6 +3,7 @@ package com.flipcard.DAO;
 import java.util.List;
 
 import com.flipcard.model.Admin;
+import com.flipcard.model.Course;
 import com.flipcard.model.Professor;
 import com.flipcard.model.Student;
 
@@ -20,5 +21,11 @@ public interface AdminDaoInterface {
 	boolean deleteUser(String username, String role);
 
 	void deleteSelfAccount(String username);
+
+	boolean checkCourseName(String courseName);
+
+	void createCourse(Course c);
+
+	void updateCourse(Course c, String coursename);
 
 }

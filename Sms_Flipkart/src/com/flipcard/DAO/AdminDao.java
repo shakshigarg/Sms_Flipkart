@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.flipcard.constants.SqlQueries;
 import com.flipcard.model.Admin;
+import com.flipcard.model.Course;
 import com.flipcard.model.Professor;
 import com.flipcard.model.Student;
 import com.flipcard.utils.DBUtils;
@@ -208,6 +209,66 @@ public class AdminDao implements AdminDaoInterface {
 			logger.error("Error occured "+e.getMessage());
 		}
 	
+	}
+	@Override
+	public boolean checkCourseName(String courseName) {
+		conn = DBUtils.getConnection();		
+
+		try {
+
+			stmt = conn.prepareStatement(SqlQueries.CHECK_COURSENAME);
+			stmt.setString(1,courseName);
+			ResultSet rs=stmt.executeQuery();
+			if(rs.next())
+				return true;
+			else {
+				return false;
+			}
+		}
+		catch(Exception e){
+			logger.error("Error occured "+e.getMessage());
+
+		}
+
+		return false;
+	}
+	@Override
+	public void createCourse(Course c) {
+		conn = DBUtils.getConnection();		
+
+		try {
+			stmt = conn.prepareStatement(SqlQueries.CREATE_COURSE);
+			stmt.setString(1,c.getCourseName());
+			stmt.setInt(2,c.getNumberOfStudents());
+			stmt.setString(3,c.getProfessorName());
+			stmt.setString(4,c.getSubject());
+			stmt.setInt(5,c.getFee());
+			stmt.executeUpdate();
+
+		}
+		catch(Exception e){
+			logger.error("Error occured "+e.getMessage());
+
+		}
+		
+	}
+	@Override
+	public void updateCourse(Course c,String coursename) {
+		conn = DBUtils.getConnection();		
+
+		try {
+			stmt = conn.prepareStatement(SqlQueries.UPDATE_COURSE);
+			stmt.setString(1,c.getCourseName());
+			stmt.setString(2,c.getSubject());
+			stmt.setInt(3,c.getFee());
+			stmt.setString(4,coursename);
+			stmt.executeUpdate();
+		}
+		catch(Exception e){
+			System.out.println("here");
+			logger.error("Error occured "+e.getMessage());
+		}
+		
 	}
 
 }

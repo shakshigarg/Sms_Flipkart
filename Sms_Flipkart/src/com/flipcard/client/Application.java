@@ -7,7 +7,9 @@ import org.apache.log4j.Logger;
 
 
 import com.flipcard.exception.AlreadyRegisteredException;
+import com.flipcard.exception.CourseAlreadyExist;
 import com.flipcard.exception.CourseAlreadyTaughtException;
+import com.flipcard.exception.CourseNotExist;
 import com.flipcard.exception.InvalidAuthenticationException;
 import com.flipcard.exception.InvalidCourseException;
 import com.flipcard.exception.InvalidRoleInput;
@@ -16,6 +18,7 @@ import com.flipcard.exception.UserAlreadyExist;
 import com.flipcard.exception.UserNotExistForRole;
 import com.flipcard.exception.StudentNotRegisteredException;
 import com.flipcard.model.Admin;
+import com.flipcard.model.Course;
 import com.flipcard.model.Professor;
 import com.flipcard.model.Student;
 import com.flipcard.service.AdminService;
@@ -207,9 +210,9 @@ public class Application {
 				logger.info("3. Create Admin");
 				logger.info("4. Delete Student/Professor");
 				logger.info("5. Delete Self Account");
-				logger.info("6. Add a course");
+				logger.info("6. Create a course");
 				logger.info("7. Update a course");
-				logger.info("6. Logout");
+				logger.info("8. Logout");
 				val=sc.nextInt();
 				switch(val) {
 				case 1:
@@ -279,12 +282,12 @@ public class Application {
 					continue;
 				case 4:
 					try {
-					logger.info("Delete Student/Professor?");
-					role=sc.next();
-					adminOperation.getUsersWithRole(role);
-					logger.info("Enter the username of "+role+" you want to delete");
-					username=sc.next();
-					adminOperation.deleteUser(username,role);
+						logger.info("Delete Student/Professor?");
+						role=sc.next();
+						adminOperation.getUsersWithRole(role);
+						logger.info("Enter the username of "+role+" you want to delete");
+						username=sc.next();
+						adminOperation.deleteUser(username,role);
 					} catch (UserNotExistForRole e) {
 						logger.info(e.getMessage());
 					} catch (InvalidRoleInput e) {
@@ -292,33 +295,76 @@ public class Application {
 					} 
 					continue;
 				case 5:
-						logger.info("You surely want to delete your account? Enter yes/no");
-						String ans=sc.next();
-						if(ans.contentEquals("yes")||ans.contentEquals("Yes")) {
-							adminOperation.deleteSelfAccount();
-							logger.info("GOODBYE!");
-							return;
-						}
-						else {
-							logger.info("Cannot delete account without your consent!");
-							continue;
-						}					
+					logger.info("You surely want to delete your account? Enter yes/no");
+					String ans=sc.next();
+					if(ans.contentEquals("yes")||ans.contentEquals("Yes")) {
+						adminOperation.deleteSelfAccount();
+						logger.info("GOODBYE!");
+						return;
+					}
+					else {
+						logger.info("Cannot delete account without your consent!");
+						continue;
+					}	
 				case 6:
-					AuthenticationService.logout();
-					logger.info("Logout Successfull! GOODBYE!");
-					return;	
+					try {
+						Course c=new Course();
+						logger.info("Enter the name of course you want to add");
+						c.setCourseName(sc.next());
+						adminOperation.checkCourseName(c.getCourseName());
+						logger.info("Enter the subject name:");
+						c.setSubject(sc.next());
+						logger.info("Enter the Fee: ");
+						c.setFee(sc.nextInt());
+						c.setNumberOfStudents(0);
+						c.setProfessorName("");
+						adminOperation.createCourse(c);
+					}
+					catch(CourseAlreadyExist e) {
+						logger.info(e.getMessage());
+					}
+					continue;
+				case 7:
+					try {
+						logger.info("\nBelow are the all courses in catalog\n");
+						adminOperation.fetchCourse();
+						Course c=new Course();
+						logger.info("Enter the name of course you want to update");
+						String coursename=sc.next();
+						adminOperation.checkCourseNameForUpdate(coursename);
+						logger.info("Enter the updated name of course");
+						c.setCourseName(sc.next());
+						if(!coursename.contentEquals(c.getCourseName()))
+						adminOperation.checkCourseName(c.getCourseName());
+						logger.info("Enter the updated subject name:");
+						c.setSubject(sc.next());
+						logger.info("Enter the updated Fee: ");
+						c.setFee(sc.nextInt());
+						adminOperation.UpdateCourse(c,coursename);
+					}
+					catch (CourseNotExist e) {
+						logger.info(e.getMessage());
+					}catch(CourseAlreadyExist e) {
+						logger.info(e.getMessage());
+					}
+					continue;
 
+				case 8:
+				AuthenticationService.logout();
+				logger.info("Logout Successfull! GOODBYE!");
+				return;	
 
-				}
 
 			}
 
 		}
 
-
-
-
-
-
 	}
+
+
+
+
+
+
+}
 }

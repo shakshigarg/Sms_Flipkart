@@ -12,11 +12,14 @@ import com.flipcard.DAO.CourseUpdation;
 import com.flipcard.DAO.CourseUpdationInterface;
 import com.flipcard.client.Application;
 import com.flipcard.exception.AlreadyRegisteredException;
+import com.flipcard.exception.CourseAlreadyExist;
+import com.flipcard.exception.CourseNotExist;
 import com.flipcard.exception.InvalidCourseException;
 import com.flipcard.exception.InvalidRoleInput;
 import com.flipcard.exception.UserAlreadyExist;
 import com.flipcard.exception.UserNotExistForRole;
 import com.flipcard.model.Admin;
+import com.flipcard.model.Course;
 import com.flipcard.model.Professor;
 import com.flipcard.model.Student;
 import com.flipcard.utils.DateTimeDay;
@@ -24,7 +27,8 @@ import com.flipcard.utils.DateTimeDay;
 public class AdminService implements AdminServiceInterface {
 
 	private String username;
-	private static Logger logger = Logger.getLogger(Application.class);	
+	private static Logger logger = Logger.getLogger(Application.class);
+	CourseCatalog catalog=new CourseCatalog();
 	AdminDaoInterface adminDaoObject=new AdminDao();
 	public AdminService(String username) {
 		this.username=username;
@@ -96,6 +100,52 @@ public class AdminService implements AdminServiceInterface {
 	public void deleteSelfAccount() {
 		adminDaoObject.deleteSelfAccount(username);
 		logger.info("Account deleted successfully!");
+		
+	}
+
+	@Override
+	public void checkCourseName(String courseName) throws CourseAlreadyExist {
+		boolean exist=adminDaoObject.checkCourseName(courseName);
+		if(exist) {
+			throw new CourseAlreadyExist("Course already exists!");
+		}
+		else {
+			return;
+		}
+		
+	}
+
+	@Override
+	public void createCourse(Course c) {
+		adminDaoObject.createCourse(c);			
+		logger.info("Course created Successfully on "+DateTimeDay.getDateTime());
+		
+	}
+	@Override
+	public void checkCourseNameForUpdate(String courseName) throws CourseNotExist {
+		boolean exist=adminDaoObject.checkCourseName(courseName);
+		if(!exist) {
+			throw new CourseNotExist("Course not exists!");
+		}
+		else {
+			return;
+		}
+		
+	}
+	
+	@Override
+	public void UpdateCourse(Course c,String coursename) {
+		adminDaoObject.updateCourse(c,coursename);			
+		logger.info("Course updated Successfully on "+DateTimeDay.getDateTime());
+		
+	}
+
+	@Override
+	public void fetchCourse() {
+		List<Course> courses = new ArrayList<Course>();
+		courses=catalog.fetchCourses();
+		
+		courses.forEach(course->System.out.println("\n Course Name: "+course.getCourseName()+"\n Number of students: "+course.getNumberOfStudents()+"\n Professor Name: "+course.getProfessorName()+"\n Fee "+course.getFee()+"\n Subject "+course.getSubject()+"\n\n"));
 		
 	}
 
