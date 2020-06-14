@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.flipcard.constants.SqlQueries;
+import com.flipcard.utils.CloseConnectionUtils;
 import com.flipcard.utils.DBUtils;
 
 public class AuthCredentials implements AuthCredentialsInterface {
@@ -40,6 +41,11 @@ public class AuthCredentials implements AuthCredentialsInterface {
 			logger.error("Error occured "+e.getMessage());
 		}
 		return null;
+		
+	}
+
+	public void logout() {
+		CloseConnectionUtils.closeConnection(DBUtils.getConnection());
 		
 	}
 }

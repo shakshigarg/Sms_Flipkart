@@ -21,6 +21,11 @@ public class AuthenticationService implements AuthenticationServiceInterface{
 		}
 	
 	}
+
+	public static void logout() {
+		authDao.logout();
+		
+	}
 	
 	
 }

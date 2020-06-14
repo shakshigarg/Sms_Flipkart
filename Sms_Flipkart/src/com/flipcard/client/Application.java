@@ -103,6 +103,7 @@ public class Application {
 					studentOperation.getReportCard();					
 					continue;
 				case 5:
+					AuthenticationService.logout();
 					logger.info("Logout Successfull! GOODBYE!");
 					return;
 
@@ -180,6 +181,7 @@ public class Application {
 					}
 					continue;			
 				case 5:
+					AuthenticationService.logout();
 					logger.info("Logout Successfull! GOODBYE!");
 					return;
 
@@ -300,6 +302,7 @@ public class Application {
 							continue;
 						}					
 				case 6:
+					AuthenticationService.logout();
 					logger.info("Logout Successfull! GOODBYE!");
 					return;	
 
