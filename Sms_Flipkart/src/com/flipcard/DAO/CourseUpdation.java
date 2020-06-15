@@ -88,6 +88,7 @@ public class CourseUpdation implements CourseUpdationInterface {
 		}
 		catch(SQLIntegrityConstraintViolationException error) {
 			// Give message if SQl query give an error
+			logger.error("Error occured "+error.getMessage());	
 			return false;
 		}
 		catch(Exception e){
@@ -313,7 +314,6 @@ public class CourseUpdation implements CourseUpdationInterface {
 
 		try {
 			stmt = conn.prepareStatement(SqlQueries.RECORD_GRADES);
-			System.out.println(grades+courseName+username);
 			stmt.setString(1,grades);
 			stmt.setString(2,courseName);
 			stmt.setString(3,username);

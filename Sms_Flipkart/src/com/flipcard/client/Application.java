@@ -169,7 +169,7 @@ public class Application {
 						logger.error(e.getMessage());
 						continue;
 					}
-					logger.error("Enter the student Name and grades");
+					logger.info("Enter the student Name and grades");
 					String studentName=sc.next();
 					String grades=sc.next();
 					try {
