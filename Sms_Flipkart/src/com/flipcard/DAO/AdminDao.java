@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,24 +15,39 @@ import com.flipcard.model.Course;
 import com.flipcard.model.Professor;
 import com.flipcard.model.Student;
 import com.flipcard.utils.DBUtils;
-import com.flipcard.utils.DateTimeDay;
 
+/*
+ * AdminDao class implements AdminDaoInterface.
+ * The class is accessed by AdminService class to perform database operations.
+ */
 public class AdminDao implements AdminDaoInterface {
+	
+	// Connection nitialised
 	private Connection conn=null;
 	private PreparedStatement stmt = null;
+	
+	// logger to log the information
 	private static Logger logger=Logger.getLogger(AuthCredentials.class);
+	
+	
 	@Override
+	// Method to create a student 
 	public void createStudent(Student s,String password) {
+		
+		// Obtain a connection
 		conn = DBUtils.getConnection();		
 
 		try {
-
+			
+			// Adds student credentials in AuthCredentials table
 			stmt = conn.prepareStatement(SqlQueries.ADD_USER_CREDENTIALS);
 			stmt.setString(1,s.getUserName());
 			stmt.setString(2,password);
 			stmt.setString(3,"student");
 			stmt.executeUpdate();
-
+			
+			
+			//Adds student information in student table
 			stmt = conn.prepareStatement(SqlQueries.ADD_STUDENT_INFO);
 			stmt.setString(1,s.getUserName());
 			stmt.setInt(2,s.getNumberOfCourses());
@@ -45,24 +59,34 @@ public class AdminDao implements AdminDaoInterface {
 
 		}
 		catch(Exception e){
+			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
 
 		}
 
 
 	}
+	
+	
 	@Override
+	
+	// This method create a new professor
 	public void createProfessor(Professor p, String password) {
+		
+		// Get the database connection
 		conn = DBUtils.getConnection();		
 
 		try {
-
+			
+			// Add professor credentials in AuthCredentials table
 			stmt = conn.prepareStatement(SqlQueries.ADD_USER_CREDENTIALS);
 			stmt.setString(1,p.getUserName());
 			stmt.setString(2,password);
 			stmt.setString(3,"professor");
 			stmt.executeUpdate();
 
+			
+			// Add professor information in professor table
 			stmt = conn.prepareStatement(SqlQueries.ADD_PROFESSOR_INFO);
 			stmt.setString(1,p.getUserName());
 			stmt.setString(2,p.getPhoneNumber());
@@ -73,24 +97,31 @@ public class AdminDao implements AdminDaoInterface {
 
 		}
 		catch(Exception e){
+			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
 
 		}
 
 
 	}
+	
+	
 	@Override
+	
+	// The method create the Admin
 	public void createAdmin(Admin a, String password) {
 		conn = DBUtils.getConnection();		
 
 		try {
-
+			
+			// Add Admin credentials to AuthCredentials table
 			stmt = conn.prepareStatement(SqlQueries.ADD_USER_CREDENTIALS);
 			stmt.setString(1,a.getUserName());
 			stmt.setString(2,password);
 			stmt.setString(3,"admin");
 			stmt.executeUpdate();
-
+			
+			// Add Admin information in Admin table
 			stmt = conn.prepareStatement(SqlQueries.ADD_ADMIN_INFO);
 			stmt.setString(1,a.getUserName());
 			stmt.setString(2,a.getPhoneNumber());
@@ -100,18 +131,26 @@ public class AdminDao implements AdminDaoInterface {
 
 		}
 		catch(Exception e){
+			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
 
 		}
 
 
 	}
+	
+	
 	@Override
+	
+	// Checks the UserName, return true if UserName, already exists else return false
 	public boolean checkUsername(String userName) {
+		
+		// Get connection
 		conn = DBUtils.getConnection();		
 
 		try {
-
+			
+			// Checks the Username
 			stmt = conn.prepareStatement(SqlQueries.CHECK_USERNAME);
 			stmt.setString(1,userName);
 			ResultSet rs=stmt.executeQuery();
@@ -122,45 +161,57 @@ public class AdminDao implements AdminDaoInterface {
 			}
 		}
 		catch(Exception e){
+			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
 
 		}
-
 		return false;
 	}
+	
+	
 	@Override
+	
+	// Fetch all the users i.e. student professor and Admin
 	public List<String> getUsersWithRole(String role) {
 		// Establish connection 
 		conn = DBUtils.getConnection();
 
 		try {
+			
+			// Get users with role
 			stmt = conn.prepareStatement(SqlQueries.GET_USERS_WITH_ROLE);
 			stmt.setString(1, role);
 			ResultSet rs = stmt.executeQuery();
 
 			List<String> userNames = new ArrayList<String>();
 
-			//STEP 5: Extract data from result set
+			// Extract data from result set
 			while(rs.next()){
+				
 				//Retrieve by column name
-
 				userNames.add(rs.getString("userName"));
 			}
 			return userNames;
 
 		}
 		catch(Exception e){
+			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
 
 		}
 		return null;
 	}
+	
+	
 	@Override
+	
+	// Delete the user with role student,professor
 	public boolean deleteUser(String username, String role) {
 		conn = DBUtils.getConnection();		
 
 		try {
-
+			
+			// Delete student or professor
 			stmt = conn.prepareStatement(SqlQueries.DELETE_USER_WITH_ROLE);
 			stmt.setString(1,username);
 			stmt.setString(2,role);
@@ -168,19 +219,27 @@ public class AdminDao implements AdminDaoInterface {
 			if(rows==0) {
 				return false;
 			}
+			
+			// If role is student the delete it from student table as well
 			if(role.contentEquals("Student")||role.contentEquals("student"))
 			{
 				stmt = conn.prepareStatement(SqlQueries.DELETE_STUDENT_INFO);
 				stmt.setString(1,username);
 				stmt.executeUpdate();
+				
+				// Delete the student from student courses table
 				stmt = conn.prepareStatement(SqlQueries.DELETE_STUDENT_COURSES);
 				stmt.setString(1,username);
 				stmt.executeUpdate();
 			}
 			else {
+				
+				// If professor the delete from professor table
 				stmt = conn.prepareStatement(SqlQueries.DELETE_PROFESSOR_INFO);
 				stmt.setString(1,username);
 				stmt.executeUpdate();
+				
+				// Reset the courses taught by professor by null
 				stmt = conn.prepareStatement(SqlQueries.RESET_PROFESSOR_COURSES);
 				stmt.setString(1,username);
 				stmt.executeUpdate();
@@ -189,28 +248,42 @@ public class AdminDao implements AdminDaoInterface {
 
 		}
 		catch(Exception e){
+			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
 
 		}
 		return false;
 	}
+	
+	
 	@Override
+	
+	// Delete the self account of Administrator
 	public void deleteSelfAccount(String username) {
 		conn = DBUtils.getConnection();		
 		try {
+			
+			// Delete Administrator from AuthCredential table
 			stmt = conn.prepareStatement(SqlQueries.DELETE_USER_WITH_ROLE);
 			stmt.setString(1,username);
 			stmt.setString(2,"admin");
 			stmt.executeUpdate();
+			
+			// Delete Administrator information from Administrator table
 			stmt = conn.prepareStatement(SqlQueries.DELETE_ADMIN_INFO);
 			stmt.setString(1,username);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
+			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
 		}
 	
 	}
+	
+	
 	@Override
+	
+	// Check if the course name is valid or not
 	public boolean checkCourseName(String courseName) {
 		conn = DBUtils.getConnection();		
 
@@ -219,6 +292,8 @@ public class AdminDao implements AdminDaoInterface {
 			stmt = conn.prepareStatement(SqlQueries.CHECK_COURSENAME);
 			stmt.setString(1,courseName);
 			ResultSet rs=stmt.executeQuery();
+			
+			// Return true if course already exist else return false
 			if(rs.next())
 				return true;
 			else {
@@ -226,17 +301,24 @@ public class AdminDao implements AdminDaoInterface {
 			}
 		}
 		catch(Exception e){
+			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
 
 		}
 
 		return false;
 	}
+	
+	// Create new course
 	@Override
 	public void createCourse(Course c) {
+		
+		// Establish the connection
 		conn = DBUtils.getConnection();		
 
 		try {
+			
+			// run query to create course 
 			stmt = conn.prepareStatement(SqlQueries.CREATE_COURSE);
 			stmt.setString(1,c.getCourseName());
 			stmt.setInt(2,c.getNumberOfStudents());
@@ -247,16 +329,25 @@ public class AdminDao implements AdminDaoInterface {
 
 		}
 		catch(Exception e){
+			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
 
 		}
 		
 	}
+	
+	
 	@Override
+	
+	// Update an exusting course
 	public void updateCourse(Course c,String coursename) {
+		
+		// Establish the connection
 		conn = DBUtils.getConnection();		
 
 		try {
+			
+			//Run query to update course
 			stmt = conn.prepareStatement(SqlQueries.UPDATE_COURSE);
 			stmt.setString(1,c.getCourseName());
 			stmt.setString(2,c.getSubject());
@@ -265,7 +356,7 @@ public class AdminDao implements AdminDaoInterface {
 			stmt.executeUpdate();
 		}
 		catch(Exception e){
-			System.out.println("here");
+			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
 		}
 		

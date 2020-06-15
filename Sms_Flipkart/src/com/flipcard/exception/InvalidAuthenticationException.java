@@ -4,7 +4,7 @@
 package com.flipcard.exception;
 
 /**
- * @author Lenovo
+ * If wrong Credentials while login the this exception is thrown
  *
  */
 public class InvalidAuthenticationException extends Exception {
@@ -13,6 +13,8 @@ public class InvalidAuthenticationException extends Exception {
 	{
 		this.message=message;
 	} 
+	
+	// Give message
 	public String getMessage() {
 		return message;
 	}
