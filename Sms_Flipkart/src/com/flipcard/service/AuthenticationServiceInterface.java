@@ -1,5 +1,6 @@
 package com.flipcard.service;
 
-public interface AuthenticationServiceInterface {
+import com.flipcard.exception.InvalidAuthenticationException;
 
+public interface AuthenticationServiceInterface {
 }

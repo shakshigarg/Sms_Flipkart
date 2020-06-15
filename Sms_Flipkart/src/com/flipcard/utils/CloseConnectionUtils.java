@@ -19,7 +19,7 @@ public class CloseConnectionUtils {
 			conn.close();
 		} catch (SQLException e) {
 			// Give error if connection cannot be closed
-			logger.info("Cannot close connection,error occured "+e.getMessage());
+			logger.error("Cannot close connection,error occured "+e.getMessage());
 		}
 	}
 }

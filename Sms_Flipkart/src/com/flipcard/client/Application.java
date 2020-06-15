@@ -28,10 +28,10 @@ import com.flipcard.utils.DateTimeDay;
 
 //The Client Application 
 public class Application {
-	
+
 	//Creating Scanner object for input output
 	private static Scanner sc= new Scanner(System.in);
-	
+
 	// Creating logger object for logging the details
 	private static Logger logger = Logger.getLogger(Application.class);
 
@@ -45,12 +45,12 @@ public class Application {
 				logger.info("enter username and password");
 				username=sc.next();
 				password=sc.next();
-				
+
 				// Check whether the usernameand password is valid or not
 				role=AuthenticationService.checkIdentity(username, password);
 			}catch(InvalidAuthenticationException e) {
 				// Exception thrown if invalid username and password
-				logger.info(e.getMessage());
+				logger.error(e.getMessage());
 			}
 		}
 
@@ -58,13 +58,13 @@ public class Application {
 		logger.info(DateTimeDay.getDateTimeDay()+"  Welcome "+username);
 
 		if(role.contentEquals("student")) {
-			
+
 			//Creating the student service object
 			StudentServiceInterface studentOperation=new StudentService(username);
 			int val;
 			String courseName=null;
 			while(true) {
-				
+
 				// Displays all the functionality for Student
 				logger.info("-----------Menu----------");
 				logger.info("1. Fetch Catalog Courses");
@@ -90,14 +90,14 @@ public class Application {
 						studentOperation.addCourse(courseName);
 
 					} catch (InvalidCourseException e) {
-						
+
 						// If course invalid then give message
-						logger.info(e.getMessage());
-						
+						logger.error(e.getMessage());
+
 					} catch(AlreadyRegisteredException e) {
-						
+
 						// If student is already registered in course then give message
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					}
 					continue;
 
@@ -112,10 +112,10 @@ public class Application {
 						studentOperation.dropCourse(courseName);
 					} catch (InvalidCourseException e) {
 						// If invalid course then give message
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					} catch (NotRegisteredCourseException e) {
 						// If student not registered for course then give message
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					}
 					continue;			
 				case 4:	
@@ -141,7 +141,7 @@ public class Application {
 			int val;
 			String courseName=null;
 			while(true) {
-				
+
 				// Displays all functionalities of professor
 				logger.info("-----------Menu----------");
 				logger.info("1. Record Grades");
@@ -152,7 +152,7 @@ public class Application {
 				val=sc.nextInt();
 				switch(val) {
 				case 1:
-					
+
 					// Displays all the courses professor teach
 					logger.info("\nBelow are courses that you teach\n");
 					professorOperation.fetchTaughtCourseNames();
@@ -160,33 +160,33 @@ public class Application {
 					courseName=sc.next();
 					logger.info("Below are the students registered for this course");
 					try {
-						
+
 						// Fetch students who are registered for the course
 						professorOperation.getStudentInfo(courseName);
 					} catch (InvalidCourseException e) {
-						
+
 						// Give message if the course added is invalid
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 						continue;
 					}
-					logger.info("Enter the student Name and grades");
+					logger.error("Enter the student Name and grades");
 					String studentName=sc.next();
 					String grades=sc.next();
 					try {
-						
+
 						// Record Students grade
 						professorOperation.recordGrades(courseName,studentName,grades);
 					} catch (StudentNotRegisteredException e) {
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					}
 					continue;
 				case 2:
-					
+
 					// Fetch all students with Mr/Ms before their name
 					professorOperation.getAllStudents();
 					continue;
 				case 3:
-					
+
 					// Fetch all courses taught by professor
 					logger.info("\nBelow are courses that you teach\n");
 					professorOperation.fetchTaughtCourseNames();
@@ -198,27 +198,27 @@ public class Application {
 
 					} catch (InvalidCourseException e) {
 						// If course entered is invalid then give message
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					} 
 					continue;
 
 				case 4:
-					
+
 					// Fetch all the course name
 					logger.info("\nChoose course you want to teach\n");
 					professorOperation.fetchCourseNames();
 					logger.info("Enter the course Name you want to teach");
 					courseName=sc.next();
 					try {
-						
+
 						// Add the course to be taught by professor
 						professorOperation.addCourseToTeach(courseName);
 
 					} catch (InvalidCourseException e) {
 						// Give message if course name is invalid
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					} catch (CourseAlreadyTaughtException e) {
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					}
 					continue;			
 				case 5:
@@ -241,11 +241,11 @@ public class Application {
 		}
 
 		if(role.contentEquals("admin")) {	
-			
+
 			// Create admin service object
 			AdminServiceInterface adminOperation=new AdminService(username);
 			int val;
-			
+
 			// Display functionality for admin
 			while(true) {
 				logger.info("-----------Menu----------");
@@ -280,13 +280,13 @@ public class Application {
 						s.setNumberOfCourses(0);
 						adminOperation.createStudent(s,password);
 					} catch (UserAlreadyExist e) {
-						
+
 						// Give message if Student already exist
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					}
 					continue;
 				case 2:
-					
+
 					// Create Professor
 					logger.info("Enter details to create Professor");
 					Professor p=new Professor();
@@ -305,13 +305,13 @@ public class Application {
 						p.setNumberOfCourses(0);
 						adminOperation.createProfessor(p,password);
 					}catch (UserAlreadyExist e) {
-						
+
 						// Give error if Professor already exist
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					}
 					continue;			
 				case 3:
-					
+
 					// Create new admin
 					logger.info("Enter details to create Admin");
 					Admin a=new Admin();
@@ -330,14 +330,14 @@ public class Application {
 						adminOperation.createAdmin(a,password);
 					}
 					catch (UserAlreadyExist e) {
-						
+
 						// Give error if admin alrady exist
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					}
 					continue;
 				case 4:
 					try {
-						
+
 						// Delete Student or professor
 						logger.info("Delete Student/Professor?");
 						role=sc.next();
@@ -346,17 +346,17 @@ public class Application {
 						username=sc.next();
 						adminOperation.deleteUser(username,role);
 					} catch (UserNotExistForRole e) {
-						
+
 						// If student or professor does not exist give error
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					} catch (InvalidRoleInput e) {
-						
+
 						// If role entered is invalid then give message
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					} 
 					continue;
 				case 5:
-					
+
 					// Take consent if admin surely want to delete the account
 					logger.info("You surely want to delete your account? Enter yes/no");
 					String ans=sc.next();
@@ -366,11 +366,11 @@ public class Application {
 						return;
 					}
 					else {
-						logger.info("Cannot delete account without your consent!");
+						logger.error("Cannot delete account without your consent!");
 						continue;
 					}	
 				case 6:
-					
+
 					// Create a new course
 					try {
 						Course c=new Course();
@@ -381,22 +381,22 @@ public class Application {
 						c.setSubject(sc.next());
 						logger.info("Enter the Fee: ");
 						c.setFee(sc.nextInt());
-						
+
 						// Set the number of students to 0
 						c.setNumberOfStudents(0);
-						
+
 						// Does not set professor name as professor himself will choose course
 						c.setProfessorName("");
 						adminOperation.createCourse(c);
 					}
 					catch(CourseAlreadyExist e) {
-						
+
 						// if course already exist the give message
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					}
 					continue;
 				case 7:
-					
+
 					// Updates the Course
 					try {
 						logger.info("\nBelow are the all courses in catalog\n");
@@ -408,7 +408,7 @@ public class Application {
 						logger.info("Enter the updated name of course");
 						c.setCourseName(sc.next());
 						if(!coursename.contentEquals(c.getCourseName()))
-						adminOperation.checkCourseName(c.getCourseName());
+							adminOperation.checkCourseName(c.getCourseName());
 						logger.info("Enter the updated subject name:");
 						c.setSubject(sc.next());
 						logger.info("Enter the updated Fee: ");
@@ -416,35 +416,35 @@ public class Application {
 						adminOperation.UpdateCourse(c,coursename);
 					}
 					catch (CourseNotExist e) {
-						
+
 						// If course not exist the give error
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					}catch(CourseAlreadyExist e) {
-						
+
 						// if updated course name already exist the give error
-						logger.info(e.getMessage());
+						logger.error(e.getMessage());
 					}
 					continue;
 
 				case 8:
-					
-				// Logout and close connection
-				AuthenticationService.logout();
-				logger.info("Logout Successfull on"+DateTimeDay.getDateTimeDay());
-				logger.info("GOODBYE!");
-				return;	
 
+					// Logout and close connection
+					AuthenticationService.logout();
+					logger.info("Logout Successfull on"+DateTimeDay.getDateTimeDay());
+					logger.info("GOODBYE!");
+					return;	
+
+
+				}
 
 			}
 
 		}
 
+
+
+
+
+
 	}
-
-
-
-
-
-
-}
 }

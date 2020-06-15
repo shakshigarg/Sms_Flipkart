@@ -160,7 +160,6 @@ public class CourseUpdation implements CourseUpdationInterface {
 			}
 		}
 		catch(SQLIntegrityConstraintViolationException error) {
-			// Give error message if SQL query generate error
 			return false;
 		}
 		catch(Exception e){

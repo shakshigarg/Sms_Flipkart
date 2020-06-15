@@ -32,7 +32,8 @@ public class StudentService implements StudentServiceInterface {
 	public StudentService(String username) {
 		this.username=username;
 	}
-
+	
+	@Override
 	/*
 	 * Fetch all the courses with details
 	 */
@@ -44,7 +45,7 @@ public class StudentService implements StudentServiceInterface {
 		
 	}
 	
-	
+	@Override
 	/*
 	 * Fetch all the course names from catalog
 	 */
