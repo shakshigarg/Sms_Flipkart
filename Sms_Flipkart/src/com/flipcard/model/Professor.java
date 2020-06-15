@@ -1,5 +1,9 @@
 package com.flipcard.model;
 
+/*
+ * Blueprint of Professor
+ * contains getters and setters for each private data field
+ */
 public class Professor {
 	private String userName;
 	private String phoneNumber;

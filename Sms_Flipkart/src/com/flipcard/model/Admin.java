@@ -1,5 +1,9 @@
 package com.flipcard.model;
 
+/*
+ * Blueprint of Administrator
+ * contains getters and setters for each private data field
+ */
 public class Admin {
 	private String userName;
 	private String phoneNumber;

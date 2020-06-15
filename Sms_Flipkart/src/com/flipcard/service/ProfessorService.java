@@ -15,6 +15,10 @@ import com.flipcard.exception.StudentNotRegisteredException;
 import com.flipcard.model.Student;
 import com.flipcard.utils.DateTimeDay;
 
+
+/*
+ *  This service is used for the functionalities of professor.
+ */
 public class ProfessorService implements ProfessorServiceInterface {
 	private String username;
 	private static Logger logger = Logger.getLogger(Application.class);
@@ -28,13 +32,20 @@ public class ProfessorService implements ProfessorServiceInterface {
 
 
 	@Override
+	/*
+	 * Record grades of professor
+	 */
 	public void recordGrades(String courseName,String studentName,String grades) throws StudentNotRegisteredException {
+		
+		// Ask dao object to record grades
 		String message=courseUpdateObject.recordGrades(courseName,studentName,grades);
 		if(message.contentEquals("added")) {
 			logger.info("Grades Added Successfully on "+DateTimeDay.getDateTime());
 			return;
 		}
 		else {
+			
+			// If student not registered for the course the cannot record grades
 			throw new StudentNotRegisteredException(message);
 		}
 		
@@ -42,8 +53,13 @@ public class ProfessorService implements ProfessorServiceInterface {
 
 
 	@Override
+	/*
+	 * Fetch all course names 
+	 */
 	public void fetchCourseNames() {
 		List<String> coursesNames = new ArrayList<String>();
+		
+		// Returns list of name
 		coursesNames=catalog.fetchCoursesName();
 		coursesNames.forEach(System.out::println);
 		
@@ -51,35 +67,52 @@ public class ProfessorService implements ProfessorServiceInterface {
 
 
 	@Override
+	/*
+	 * Professor add the course to teach
+	 */
 	public void addCourseToTeach(String courseName) throws CourseAlreadyTaughtException, InvalidCourseException {
 		boolean valid=courseUpdateObject.verifyCourse(courseName);
 		if(valid) {
+			
+			// If course is valid then give course adde successfully
 			String message=courseUpdateObject.addCourseToTeach(username,courseName);
 			if(message.contentEquals("added")) {
 				logger.info("Course Added Successfully on "+DateTimeDay.getDateTime());
 				return;
 			}
 			else {
+				
+				// If course already being taught by other professor then raise an error
 				throw new CourseAlreadyTaughtException(message);
 			}
 		}
 		else {
+			
+			// If course is not available to add then give error course not available
 			throw new InvalidCourseException("Course Not Available");
 		}
 		
 		
 	}
 
-
+	
+	/*
+	 * Fetch the course names to be displayed when professor want to select course to teach
+	 */
 	@Override
 	public void fetchTaughtCourseNames() {
 		List<String> coursesNames = new ArrayList<String>();
+		
+		// Get the list of courses names
 		coursesNames=courseUpdateObject.fetchTaughtCoursesName(username);
 		coursesNames.forEach(System.out::println);
 		
 	}
 
-
+	
+	/*
+	 * Get student information registered for a course
+	 */
 	@Override
 	public void getStudentInfo(String courseName) throws InvalidCourseException {
 		
@@ -90,6 +123,7 @@ public class ProfessorService implements ProfessorServiceInterface {
 			studentNames.forEach(System.out::println);
 		}
 		else {
+			// If the course entered for which professor want information is invalid then raise error
 			throw new InvalidCourseException("Course Not Available");
 		}
 		
@@ -98,6 +132,9 @@ public class ProfessorService implements ProfessorServiceInterface {
 
 
 	@Override
+	/*
+	 * Print all the student information having Mr/Ms based on gender
+	 */
 	public void getAllStudents() {
 		List<Student> students = new ArrayList<Student>();
 		students=courseUpdateObject.getAllStudents();

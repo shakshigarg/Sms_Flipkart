@@ -11,12 +11,22 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-
+/*
+ * The utils class is used create connection with database
+ * Have the static method getConnection which returns connection with database
+ */
 public class DBUtils {
 	
+	// Initialize connection variable with null
 	private static Connection connection = null;
+	
+	// logger object to log the messages
 	private static Logger logger=Logger.getLogger(DBUtils.class);
 	
+	
+	/*
+	 * establish the connection
+	 */
 	public static Connection getConnection() {
 		
         if (connection != null)
@@ -41,17 +51,16 @@ public class DBUtils {
                 logger.debug("Connection established!");
                 
             } catch (ClassNotFoundException e) {
-            	logger.error("Error occured");
-                e.printStackTrace();
+            	logger.error("Error occured "+e.getMessage());
             } catch (SQLException e) {
-                e.printStackTrace();
+            	// If some error in query the give error
+            	logger.error("Error occured "+e.getMessage());
             } 
             catch (FileNotFoundException e) {
-            	logger.error("Error occured");
-                e.printStackTrace();
+            	// Give error if file not found
+            	logger.error("Error occured "+e.getMessage());
             } catch (IOException e) {
-            	logger.error("Error occured");
-                e.printStackTrace();
+            	logger.error("Error occured "+e.getMessage());
             }
             return connection;
         }

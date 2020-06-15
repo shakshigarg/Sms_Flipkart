@@ -16,9 +16,14 @@ import com.flipcard.exception.NotRegisteredCourseException;
 import com.flipcard.model.Course;
 import com.flipcard.utils.DateTimeDay;
 
+/*
+ * This service is used to perform student functionalities
+ */
 public class StudentService implements StudentServiceInterface {
 	
 	private String username;
+	
+	// Get the catalog object to interact with database
 	CourseCatalog catalog=new CourseCatalog();
 	private static Logger logger = Logger.getLogger(Application.class);
 	CourseUpdationInterface courseUpdateObject=new CourseUpdation();
@@ -28,16 +33,21 @@ public class StudentService implements StudentServiceInterface {
 		this.username=username;
 	}
 
-
+	/*
+	 * Fetch all the courses with details
+	 */
 	public void fetchCourses() {
 		List<Course> courses = new ArrayList<Course>();
 		courses=catalog.fetchCourses();
-		
+		// displays the courses
 		courses.forEach(course->System.out.println("\n Course Name: "+course.getCourseName()+"\n Number of students: "+course.getNumberOfStudents()+"\n Professor Name: "+course.getProfessorName()+"\n Fee "+course.getFee()+"\n Subject "+course.getSubject()+"\n\n"));
 		
 	}
 	
 	
+	/*
+	 * Fetch all the course names from catalog
+	 */
 	public void fetchCourseNames() {
 		List<String> coursesNames = new ArrayList<String>();
 		coursesNames=catalog.fetchCoursesName();
@@ -46,8 +56,12 @@ public class StudentService implements StudentServiceInterface {
 		
 	}
 
-
+	
 	@Override
+	/*
+	 * Register student for course
+	 * throws error if course name is not valid and if the student registered already
+	 */
 	public void addCourse(String courseName) throws InvalidCourseException, AlreadyRegisteredException {
 			
 		boolean valid=courseUpdateObject.verifyCourse(courseName);
@@ -58,10 +72,12 @@ public class StudentService implements StudentServiceInterface {
 				return;
 			}
 			else {
+				// Give error if student already registered
 				throw new AlreadyRegisteredException("You have already registered for this course");
 			}
 		}
 		else {
+			// Give error if course not available to register
 			throw new InvalidCourseException("Course Not Available");
 		}
 		
@@ -69,16 +85,24 @@ public class StudentService implements StudentServiceInterface {
 
 
 	@Override
+	/*
+	 * Fetech all the courses student is registered in
+	 */
 	public void fetchRegisteredCourses() {
 		List<String> coursesNames = new ArrayList<String>();
 		coursesNames=courseUpdateObject.fetchRegisteredCourses(username);
-		
+		// Displays course name
 		coursesNames.forEach(System.out::println);
 		
 	}
 
 
 	@Override
+	/*
+	 * Drop the course 
+	 * throws error if student is not registered in course 
+	 * throws error if course is invalid
+	 */
 	public void dropCourse(String courseName) throws NotRegisteredCourseException, InvalidCourseException {
 		boolean valid=courseUpdateObject.verifyCourse(courseName);
 		if(valid) {
@@ -88,23 +112,25 @@ public class StudentService implements StudentServiceInterface {
 				return;
 			}
 			else {
+				
+				// if student is not registered for course the course cannot be dropped
 				throw new NotRegisteredCourseException("You have not registered for this course");
 			}
 		}
 		else {
+			// if course is not available then throw error
 			throw new InvalidCourseException("Course Not Available");
 		}
 		
 	}
 
 
-	@Override
-	public void getGrades(String courseName){
-				
-	}
-
 
 	@Override
+	/*
+	 * Get report card of student
+	 * if grades are not entered by professor then say Grades not recored by professor
+	 */
 	public void getReportCard() {
 		HashMap<String,String> report_card=new HashMap<String,String>();
 		report_card=courseUpdateObject.fetchReportCard(username);		
@@ -112,11 +138,12 @@ public class StudentService implements StudentServiceInterface {
 		if(entries==0) {
 			logger.info("You are not registered for any course");
 		}
+		
 		report_card.forEach((course,grade)->{
 			 if(!grade.contentEquals("")) 
-				 System.out.println(course+"                   "+grade);  
+				 System.out.println(course+"\t\t"+grade);  
 			 else 
-				 System.out.println(course+"          "+"Grades not recorded by Professor");  		
+				 System.out.println(course+"\t\t"+"Grades not recorded by Professor");  		
 		 });
 			
 	}

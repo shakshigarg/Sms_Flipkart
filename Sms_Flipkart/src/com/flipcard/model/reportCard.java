@@ -2,6 +2,10 @@ package com.flipcard.model;
 
 import java.util.HashMap;
 
+/*
+ * Blueprint of report card
+ * contains getters and setters for each private data field
+ */
 public class reportCard {
 	private HashMap<String,String> report_card=new HashMap<String,String>();
 
