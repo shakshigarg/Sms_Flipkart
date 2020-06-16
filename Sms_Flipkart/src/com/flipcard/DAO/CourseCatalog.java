@@ -42,7 +42,6 @@ public class CourseCatalog {
 						//Retrieve by column name
 						Course c=new Course();
 						c.setCourseName( rs.getString("courseName"));
-						c.setNumberOfStudents(rs.getInt("numberOfStudents"));
 						c.setProfessorName(rs.getString("professorName"));
 						c.setSubject(rs.getString("subject"));
 						c.setFee(rs.getInt("fee"));

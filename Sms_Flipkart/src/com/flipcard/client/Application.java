@@ -57,7 +57,7 @@ public class Application {
 		logger.info("Login Success");
 		logger.info(DateTimeDay.getDateTimeDay()+"  Welcome "+username);
 
-		if(role.contentEquals("student")) {
+		if(role.equalsIgnoreCase("student")) {
 
 			//Creating the student service object
 			StudentServiceInterface studentOperation=new StudentService(username);
@@ -125,7 +125,7 @@ public class Application {
 				case 5:
 					// Close connection with database and logout Student
 					AuthenticationService.logout();
-					logger.info("Logout Successfull on"+DateTimeDay.getDateTimeDay());
+					logger.info("Logout Successfull on "+DateTimeDay.getDateTimeDay());
 					logger.info("GOODBYE!");
 					return;
 
@@ -134,7 +134,7 @@ public class Application {
 
 			}
 		}
-		if(role.contentEquals("professor")) {
+		if(role.equalsIgnoreCase("professor")) {
 
 			// Create object for professor service
 			ProfessorServiceInterface professorOperation=new ProfessorService(username);
@@ -224,7 +224,7 @@ public class Application {
 				case 5:
 					// Logout and close connection with database
 					AuthenticationService.logout();
-					logger.info("Logout Successfull on"+DateTimeDay.getDateTimeDay());
+					logger.info("Logout Successfull on "+DateTimeDay.getDateTimeDay());
 					logger.info("GOODBYE!");
 					return;
 
@@ -240,7 +240,7 @@ public class Application {
 
 		}
 
-		if(role.contentEquals("admin")) {	
+		if(role.equalsIgnoreCase("admin")) {	
 
 			// Create admin service object
 			AdminServiceInterface adminOperation=new AdminService(username);
@@ -382,9 +382,6 @@ public class Application {
 						logger.info("Enter the Fee: ");
 						c.setFee(sc.nextInt());
 
-						// Set the number of students to 0
-						c.setNumberOfStudents(0);
-
 						// Does not set professor name as professor himself will choose course
 						c.setProfessorName("");
 						adminOperation.createCourse(c);
@@ -407,7 +404,7 @@ public class Application {
 						adminOperation.checkCourseNameForUpdate(coursename);
 						logger.info("Enter the updated name of course");
 						c.setCourseName(sc.next());
-						if(!coursename.contentEquals(c.getCourseName()))
+						if(!coursename.equalsIgnoreCase(c.getCourseName()))
 							adminOperation.checkCourseName(c.getCourseName());
 						logger.info("Enter the updated subject name:");
 						c.setSubject(sc.next());
@@ -430,7 +427,7 @@ public class Application {
 
 					// Logout and close connection
 					AuthenticationService.logout();
-					logger.info("Logout Successfull on"+DateTimeDay.getDateTimeDay());
+					logger.info("Logout Successfull on "+DateTimeDay.getDateTimeDay());
 					logger.info("GOODBYE!");
 					return;	
 

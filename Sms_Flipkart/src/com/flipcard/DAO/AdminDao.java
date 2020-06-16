@@ -43,7 +43,7 @@ public class AdminDao implements AdminDaoInterface {
 			stmt = conn.prepareStatement(SqlQueries.ADD_USER_CREDENTIALS);
 			stmt.setString(1,s.getUserName());
 			stmt.setString(2,password);
-			stmt.setString(3,"student");
+			stmt.setInt(3,2);
 			stmt.executeUpdate();
 			
 			
@@ -61,7 +61,7 @@ public class AdminDao implements AdminDaoInterface {
 		catch(Exception e){
 			// if the SQL queries give any error then it give the error message.
 			logger.error("Error occured "+e.getMessage());
-
+			e.printStackTrace();
 		}
 
 
@@ -82,7 +82,7 @@ public class AdminDao implements AdminDaoInterface {
 			stmt = conn.prepareStatement(SqlQueries.ADD_USER_CREDENTIALS);
 			stmt.setString(1,p.getUserName());
 			stmt.setString(2,password);
-			stmt.setString(3,"professor");
+			stmt.setInt(3,3);
 			stmt.executeUpdate();
 
 			
@@ -118,7 +118,7 @@ public class AdminDao implements AdminDaoInterface {
 			stmt = conn.prepareStatement(SqlQueries.ADD_USER_CREDENTIALS);
 			stmt.setString(1,a.getUserName());
 			stmt.setString(2,password);
-			stmt.setString(3,"admin");
+			stmt.setInt(3,1);
 			stmt.executeUpdate();
 			
 			// Add Admin information in Admin table
@@ -180,7 +180,14 @@ public class AdminDao implements AdminDaoInterface {
 			
 			// Get users with role
 			stmt = conn.prepareStatement(SqlQueries.GET_USERS_WITH_ROLE);
-			stmt.setString(1, role);
+			int roleId=0;
+			if(role.equalsIgnoreCase("student")) {
+				roleId=2;
+			}
+			if(role.equalsIgnoreCase("professor")) {
+				roleId=3;
+			}
+			stmt.setInt(1, roleId);
 			ResultSet rs = stmt.executeQuery();
 
 			List<String> userNames = new ArrayList<String>();
@@ -210,18 +217,24 @@ public class AdminDao implements AdminDaoInterface {
 		conn = DBUtils.getConnection();		
 
 		try {
-			
+			int roleId=0;
+			if(role.equalsIgnoreCase("student")) {
+				roleId=2;
+			}
+			if(role.equalsIgnoreCase("professor")) {
+				roleId=3;
+			}
 			// Delete student or professor
 			stmt = conn.prepareStatement(SqlQueries.DELETE_USER_WITH_ROLE);
 			stmt.setString(1,username);
-			stmt.setString(2,role);
+			stmt.setInt(2,roleId);
 			int rows=stmt.executeUpdate();
 			if(rows==0) {
 				return false;
 			}
 			
 			// If role is student the delete it from student table as well
-			if(role.contentEquals("Student")||role.contentEquals("student"))
+			if(roleId==2)
 			{
 				stmt = conn.prepareStatement(SqlQueries.DELETE_STUDENT_INFO);
 				stmt.setString(1,username);
@@ -229,6 +242,10 @@ public class AdminDao implements AdminDaoInterface {
 				
 				// Delete the student from student courses table
 				stmt = conn.prepareStatement(SqlQueries.DELETE_STUDENT_COURSES);
+				stmt.setString(1,username);
+				stmt.executeUpdate();
+				
+				stmt = conn.prepareStatement(SqlQueries.DELETE_STUDENT_GRADES);
 				stmt.setString(1,username);
 				stmt.executeUpdate();
 			}
@@ -266,7 +283,7 @@ public class AdminDao implements AdminDaoInterface {
 			// Delete Administrator from AuthCredential table
 			stmt = conn.prepareStatement(SqlQueries.DELETE_USER_WITH_ROLE);
 			stmt.setString(1,username);
-			stmt.setString(2,"admin");
+			stmt.setInt(2,1);
 			stmt.executeUpdate();
 			
 			// Delete Administrator information from Administrator table
@@ -321,10 +338,9 @@ public class AdminDao implements AdminDaoInterface {
 			// run query to create course 
 			stmt = conn.prepareStatement(SqlQueries.CREATE_COURSE);
 			stmt.setString(1,c.getCourseName());
-			stmt.setInt(2,c.getNumberOfStudents());
-			stmt.setString(3,c.getProfessorName());
-			stmt.setString(4,c.getSubject());
-			stmt.setInt(5,c.getFee());
+			stmt.setString(2,c.getProfessorName());
+			stmt.setString(3,c.getSubject());
+			stmt.setInt(4,c.getFee());
 			stmt.executeUpdate();
 
 		}

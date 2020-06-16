@@ -37,17 +37,24 @@ public class AuthCredentials implements AuthCredentialsInterface {
 			// Get the ResultSet from query
 			ResultSet rs = stmt.executeQuery();
 			
-			while(rs.next()) {
-				return rs.getString("role");
+			if(rs.next()) {
+				stmt = conn.prepareStatement(SqlQueries.GET_ROLE);
+				 
+				stmt.setInt(1,rs.getInt("roleId"));
+				ResultSet rs_role = stmt.executeQuery();
+				if(rs_role.next()) {
+					return rs_role.getString("rolename");
+				}
 			}
-			
 			return null;
+
 			}
 			
 		catch(Exception e){
 			
 			// Give error if the sql query throw an error
 			logger.error("Error occured "+e.getMessage());
+			e.printStackTrace();
 		}
 		return null;
 		

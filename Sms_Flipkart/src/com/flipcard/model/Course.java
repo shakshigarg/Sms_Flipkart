@@ -7,7 +7,6 @@ package com.flipcard.model;
  */
 public class Course {
 	private String courseName;
-	private int numberOfStudents;
 	private String professorName;
 	private String subject;
 	private int fee;
@@ -23,18 +22,7 @@ public class Course {
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
-	/**
-	 * @return the numberOfStudents
-	 */
-	public int getNumberOfStudents() {
-		return numberOfStudents;
-	}
-	/**
-	 * @param numberOfStudents the numberOfStudents to set
-	 */
-	public void setNumberOfStudents(int numberOfStudents) {
-		this.numberOfStudents = numberOfStudents;
-	}
+	
 	/**
 	 * @return the professorName
 	 */

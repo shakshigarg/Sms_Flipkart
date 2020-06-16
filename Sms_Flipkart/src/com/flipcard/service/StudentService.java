@@ -41,7 +41,7 @@ public class StudentService implements StudentServiceInterface {
 		List<Course> courses = new ArrayList<Course>();
 		courses=catalog.fetchCourses();
 		// displays the courses
-		courses.forEach(course->System.out.println("\n Course Name: "+course.getCourseName()+"\n Number of students: "+course.getNumberOfStudents()+"\n Professor Name: "+course.getProfessorName()+"\n Fee "+course.getFee()+"\n Subject "+course.getSubject()+"\n\n"));
+		courses.forEach(course->System.out.println("\n Course Name: "+course.getCourseName()+"\n Professor Name: "+course.getProfessorName()+"\n Fee "+course.getFee()+"\n Subject "+course.getSubject()+"\n\n"));
 		
 	}
 	
@@ -141,7 +141,7 @@ public class StudentService implements StudentServiceInterface {
 		}
 		
 		report_card.forEach((course,grade)->{
-			 if(!grade.contentEquals("")) 
+			 if(!grade.equalsIgnoreCase("")) 
 				 System.out.println(course+"\t\t"+grade);  
 			 else 
 				 System.out.println(course+"\t\t"+"Grades not recorded by Professor");  		

@@ -92,7 +92,7 @@ public class AdminService implements AdminServiceInterface {
 	 * Get all users with specified role
 	 */
 	public void getUsersWithRole(String role) throws InvalidRoleInput {
-		if(role.contentEquals("Admin")||role.contentEquals("admin")) {
+		if(role.equalsIgnoreCase("admin")) {
 			throw new InvalidRoleInput("Invalid role input!");
 		}
 		
@@ -203,7 +203,7 @@ public class AdminService implements AdminServiceInterface {
 	public void fetchCourse() {
 		List<Course> courses = new ArrayList<Course>();
 		courses=catalog.fetchCourses();
-		courses.forEach(course->System.out.println("\n Course Name: "+course.getCourseName()+"\n Number of students: "+course.getNumberOfStudents()+"\n Professor Name: "+course.getProfessorName()+"\n Fee "+course.getFee()+"\n Subject "+course.getSubject()+"\n\n"));
+		courses.forEach(course->System.out.println("\n Course Name: "+course.getCourseName()+"\n Professor Name: "+course.getProfessorName()+"\n Fee "+course.getFee()+"\n Subject "+course.getSubject()+"\n\n"));
 		
 	}
 

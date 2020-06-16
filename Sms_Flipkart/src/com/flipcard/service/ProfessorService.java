@@ -39,7 +39,7 @@ public class ProfessorService implements ProfessorServiceInterface {
 		
 		// Ask dao object to record grades
 		String message=courseUpdateObject.recordGrades(courseName,studentName,grades);
-		if(message.contentEquals("added")) {
+		if(message.equalsIgnoreCase("added")) {
 			logger.info("Grades Added Successfully on "+DateTimeDay.getDateTime());
 			return;
 		}
@@ -76,7 +76,7 @@ public class ProfessorService implements ProfessorServiceInterface {
 			
 			// If course is valid then give course adde successfully
 			String message=courseUpdateObject.addCourseToTeach(username,courseName);
-			if(message.contentEquals("added")) {
+			if(message.equalsIgnoreCase("added")) {
 				logger.info("Course Added Successfully on "+DateTimeDay.getDateTime());
 				return;
 			}
@@ -144,7 +144,7 @@ public class ProfessorService implements ProfessorServiceInterface {
 		students
 		 .stream()
 		 .forEach(student->{
-			 if(student.getGender().contentEquals("Female")) 
+			 if(student.getGender().equalsIgnoreCase("Female")) 
 			 System.out.println("Ms. "+student.getUserName());
 			 else 
 			 System.out.println("Mr. "+student.getUserName());			

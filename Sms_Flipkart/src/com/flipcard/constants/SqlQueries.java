@@ -9,19 +9,19 @@ public class SqlQueries {
 	public static String GET_COURSE_NAMES="SELECT COURSENAME FROM CATALOG";
 	
 	// Fetch the coursenames in which student is registered
-	public static String GET_REGISTERED_COURSE_NAMES="SELECT COURSENAME FROM STUDENTCOURSES WHERE USERNAME=?";
+	public static String GET_REGISTERED_COURSE_NAMES="SELECT COURSENAME FROM REGISTRATION WHERE USERNAME=?";
 	
 	// Check if the username and password is valid
-	public static String CHECK_IDENTITY="SELECT ROLE FROM AUTHCREDENTIALS WHERE USERNAME=? AND PASSWORD=?";
+	public static String CHECK_IDENTITY="SELECT ROLEID FROM USERS WHERE USERNAME=? AND PASSWORD=?";
 	
 	// Check if course added is valid or not
 	public static String VERIFY_COURSE="SELECT * FROM CATALOG WHERE COURSENAME=?";
 	
 	// Add new course to student courses
-	public static String ADD_NEW_COURSE="INSERT INTO STUDENTCOURSES VALUES (?,?,?,?)";
+	public static String ADD_NEW_COURSE="INSERT INTO REGISTRATION VALUES (?,?,?)";
 	
 	// Drop registered course
-	public static String DROP_COURSE="DELETE FROM STUDENTCOURSES WHERE USERNAME=? AND COURSENAME=?";
+	public static String DROP_COURSE="DELETE FROM REGISTRATION WHERE USERNAME=? AND COURSENAME=?";
 	
 	// Add course to teach for professor
 	public static String ADD_COURSE_TO_TEACH="UPDATE CATALOG SET PROFESSORNAME=? WHERE COURSENAME=? AND PROFESSORNAME=?";
@@ -30,19 +30,19 @@ public class SqlQueries {
 	public static String GET_TAUGHT_COURSE_NAMES="SELECT COURSENAME FROM CATALOG WHERE PROFESSORNAME=?";
 	
 	// Get Students registered for a course
-	public static String GET_STUDENTS_NAME="SELECT USERNAME FROM STUDENTCOURSES WHERE COURSENAME=?";
+	public static String GET_STUDENTS_NAME="SELECT USERNAME FROM REGISTRATION WHERE COURSENAME=?";
 	
 	// Get all the students 
 	public static String GET_ALL_STUDENTS="SELECT * FROM STUDENT";
 	
 	// Record grades of student
-	public static String RECORD_GRADES="UPDATE STUDENTCOURSES SET GRADES=? WHERE COURSENAME=? AND USERNAME=?";
+	public static String RECORD_GRADES="UPDATE GRADES SET GRADES=? WHERE COURSE=? AND USERNAME=?";
 	
 	// Fetch report card
-	public static String GET_REPORT_CARD="SELECT COURSENAME,GRADES FROM STUDENTCOURSES WHERE USERNAME=?";
+	public static String GET_REPORT_CARD="SELECT COURSE,GRADES FROM GRADES WHERE USERNAME=?";
 	
 	// Add student, professor, admin credentials
-	public static String ADD_USER_CREDENTIALS="INSERT INTO AUTHCREDENTIALS VALUES (?,?,?)";
+	public static String ADD_USER_CREDENTIALS="INSERT INTO USERS VALUES (?,?,?)";
 	
 	// Add student information
 	public static String ADD_STUDENT_INFO="INSERT INTO STUDENT VALUES (?,?,?,?,?,?)";
@@ -54,13 +54,13 @@ public class SqlQueries {
 	public static String ADD_ADMIN_INFO="INSERT INTO ADMIN VALUES (?,?,?,?)";
 	
 	// Check if the username created is valid or not
-	public static String CHECK_USERNAME="SELECT * FROM AUTHCREDENTIALS WHERE USERNAME=?";
+	public static String CHECK_USERNAME="SELECT * FROM USERS WHERE USERNAME=?";
 	
 	// Get Students or professors or admin
-	public static String GET_USERS_WITH_ROLE="SELECT USERNAME FROM AUTHCREDENTIALS WHERE ROLE=?";
+	public static String GET_USERS_WITH_ROLE="SELECT USERNAME FROM USERS WHERE ROLEID=?";
 	
 	// Delete student/professor/admin
-	public static String DELETE_USER_WITH_ROLE="DELETE FROM AUTHCREDENTIALS WHERE USERNAME=? and ROLE=?";
+	public static String DELETE_USER_WITH_ROLE="DELETE FROM USERS WHERE USERNAME=? and ROLEID=?";
 	
 	// Delete student information
 	public static String DELETE_STUDENT_INFO="DELETE FROM STUDENT WHERE USERNAME=?";
@@ -69,28 +69,25 @@ public class SqlQueries {
 	public static String DELETE_PROFESSOR_INFO="DELETE FROM PROFESSOR WHERE USERNAME=?";
 	
 	// Delete student from student courses
-	public static String DELETE_STUDENT_COURSES="DELETE FROM STUDENTCOURSES WHERE USERNAME=?";
+	public static String DELETE_STUDENT_COURSES="DELETE FROM REGISTRATION WHERE USERNAME=?";
+	
+	// Delete student from grades
+		public static String DELETE_STUDENT_GRADES="DELETE FROM GRADES WHERE USERNAME=?";
 	
 	// Delete professor from catalog
 	public static String RESET_PROFESSOR_COURSES="UPDATE CATALOG SET PROFESSORNAME='' WHERE PROFESSORNAME=?";
 	
 	// Delete admin from admin info
 	public static String DELETE_ADMIN_INFO="DELETE FROM ADMIN WHERE USERNAME=?";
-	
-	// Increase count of students
-	public static String INCREASE_COUNT_OF_STUDENTS="UPDATE CATALOG SET NUMBEROFSTUDENTS=NUMBEROFSTUDENTS+1 WHERE COURSENAME=?";
-	
-	// Decrease count of students 
-	public static String DECREASE_COUNT_OF_STUDENTS="UPDATE CATALOG SET NUMBEROFSTUDENTS=NUMBEROFSTUDENTS-1 WHERE COURSENAME=?";
-	
+		
 	// Check if course name exist
 	public static String CHECK_COURSENAME="SELECT * FROM CATALOG WHERE COURSENAME=?";
 	
 	// Create new course
-	public static String CREATE_COURSE="INSERT INTO CATALOG VALUES (?,?,?,?,?)";
+	public static String CREATE_COURSE="INSERT INTO CATALOG VALUES (?,?,?,?)";
 	
 	// Update already existing course
-	public static String UPDATE_COURSE="UPDATE CATALOG SET coursename=?,subject=?,fee=? where coursename=?";
+	public static String UPDATE_COURSE="UPDATE CATALOG SET COURSENAME=?,SUBJECT=?,FEE=? WHERE COURSENAME=?";
 	
 	// Increase number of courses count for student
 	public static String INCREASE_COUNT_OF_COURSES="UPDATE STUDENT SET NUMBEROFCOURSES=NUMBEROFCOURSES+1 WHERE USERNAME=?";
@@ -101,6 +98,12 @@ public class SqlQueries {
 	// Increase no of courses count for professor
 	public static String INCREASE_COUNT_OF_PROFESSOR_COURSES="UPDATE PROFESSOR SET NUMBEROFCOURSES=NUMBEROFCOURSES+1 WHERE USERNAME=?";
 
+	//Get role of user
+	public static String GET_ROLE="SELECT ROLENAME FROM ROLE WHERE ROLEID=?";
 	
+	// Add course to grades
+	public static String ADD_TO_GRADES="INSERT INTO GRADES VALUES(?,?,?)";
+	// Drop course from grades
+	public static String DROP_FROM_GRADES="DELETE FROM GRADES WHERE USERNAME=? AND COURSE=?";
 	
 }

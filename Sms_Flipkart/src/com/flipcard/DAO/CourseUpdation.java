@@ -73,17 +73,17 @@ public class CourseUpdation implements CourseUpdationInterface {
 			stmt.setString(1,username);
 			stmt.setString(2, courseName);
 			stmt.setString(3,DateTimeDay.getDateTime());
-			stmt.setString(4,"");
-			stmt.executeUpdate();
-
-			stmt = conn.prepareStatement(SqlQueries.INCREASE_COUNT_OF_STUDENTS);
-			stmt.setString(1, courseName);
 			stmt.executeUpdate();
 
 			stmt = conn.prepareStatement(SqlQueries.INCREASE_COUNT_OF_COURSES);
 			stmt.setString(1, username);
 			stmt.executeUpdate();
-
+			
+			stmt = conn.prepareStatement(SqlQueries.ADD_TO_GRADES);
+			stmt.setString(1,username);
+			stmt.setString(2, courseName);
+			stmt.setString(3, "");
+			stmt.executeUpdate();
 			return true;
 		}
 		catch(SQLIntegrityConstraintViolationException error) {
@@ -149,12 +149,13 @@ public class CourseUpdation implements CourseUpdationInterface {
 				return false;
 			else
 			{
-				stmt = conn.prepareStatement(SqlQueries.DECREASE_COUNT_OF_STUDENTS);
-				stmt.setString(1, courseName);
-				stmt.executeUpdate();
-
 				stmt = conn.prepareStatement(SqlQueries.DECREASE_COUNT_OF_COURSES);
 				stmt.setString(1, username);
+				stmt.executeUpdate();
+				
+				stmt = conn.prepareStatement(SqlQueries.DROP_FROM_GRADES);
+				stmt.setString(1,username);
+				stmt.setString(2, courseName);
 				stmt.executeUpdate();
 				// Return true if drop course is successful
 				return true;
@@ -354,7 +355,7 @@ public class CourseUpdation implements CourseUpdationInterface {
 			// Extract data from result set
 			while(rs.next()){
 				//Retrieve by column name				
-				report_card.put(rs.getString("courseName"),rs.getString("grades"));
+				report_card.put(rs.getString("course"),rs.getString("grades"));
 			}
 			return report_card;
 
