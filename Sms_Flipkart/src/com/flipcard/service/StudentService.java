@@ -63,11 +63,11 @@ public class StudentService implements StudentServiceInterface {
 	 * Register student for course
 	 * throws error if course name is not valid and if the student registered already
 	 */
-	public void addCourse(String courseName) throws InvalidCourseException, AlreadyRegisteredException {
+	public void addCourse(String courseName,int paymentMode) throws InvalidCourseException, AlreadyRegisteredException {
 			
 		boolean valid=courseUpdateObject.verifyCourse(courseName);
 		if(valid) {
-			boolean added=courseUpdateObject.addCourse(username,courseName);
+			boolean added=courseUpdateObject.addCourse(username,courseName,paymentMode);
 			if(added) {
 				logger.info("Course Added Successfully on "+DateTimeDay.getDateTime());
 				return;

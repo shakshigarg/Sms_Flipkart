@@ -14,7 +14,7 @@ public interface CourseUpdationInterface {
 	public boolean verifyCourse(String courseName);
 	
 	// Register student in course
-	public boolean addCourse(String username, String courseName);
+	public boolean addCourse(String username, String courseName, int paymentMode);
 
 	// Fetch registered courses of student
 	public List<String> fetchRegisteredCourses(String username);

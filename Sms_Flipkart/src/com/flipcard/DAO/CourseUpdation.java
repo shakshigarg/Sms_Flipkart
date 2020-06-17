@@ -62,17 +62,34 @@ public class CourseUpdation implements CourseUpdationInterface {
 	 * Increase count in number of students field of catalog
 	 * Increase the count of number of courses registered
 	 */
-	public boolean addCourse(String username,String courseName) {
+	public boolean addCourse(String username,String courseName,int paymentMode) {
 		conn = DBUtils.getConnection();		
 
 		try {
-
+			stmt = conn.prepareStatement(SqlQueries.CHECK_IF_REGISTERED);
+			stmt.setString(1,username);
+			stmt.setString(2, courseName);
+			ResultSet rs=stmt.executeQuery();
+			if(rs.next()){
+				return false;
+			}
+			
+			stmt = conn.prepareStatement(SqlQueries.PAY);
+			stmt.setInt(1,paymentMode);
+			stmt.setString(2, username+","+courseName);
+			int rows=stmt.executeUpdate();
+			System.out.println(rows);
+			stmt = conn.prepareStatement(SqlQueries.GET_PAYMENT_ID);
+			stmt.setInt(1,paymentMode);
+			stmt.setString(2, username+","+courseName);
+			ResultSet rs_new=stmt.executeQuery();
+			
 			// Run SQL query to register for new course
 			stmt = conn.prepareStatement(SqlQueries.ADD_NEW_COURSE);
-
 			stmt.setString(1,username);
 			stmt.setString(2, courseName);
 			stmt.setString(3,DateTimeDay.getDateTime());
+			stmt.setInt(4, rs_new.getInt("paymentId"));
 			stmt.executeUpdate();
 
 			stmt = conn.prepareStatement(SqlQueries.INCREASE_COUNT_OF_COURSES);
@@ -84,15 +101,18 @@ public class CourseUpdation implements CourseUpdationInterface {
 			stmt.setString(2, courseName);
 			stmt.setString(3, "");
 			stmt.executeUpdate();
+			
 			return true;
 		}
 		catch(SQLIntegrityConstraintViolationException error) {
 			// Give message if SQl query give an error
 			logger.error("Error occured "+error.getMessage());	
+			error.printStackTrace();
 			return false;
 		}
 		catch(Exception e){
-			logger.error("Error occured "+e.getMessage());			
+			logger.error("Error occured "+e.getMessage());	
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -190,6 +210,12 @@ public class CourseUpdation implements CourseUpdationInterface {
 			{
 				stmt = conn.prepareStatement(SqlQueries.INCREASE_COUNT_OF_PROFESSOR_COURSES);
 				stmt.setString(1, username);
+				stmt.executeUpdate();
+				
+				stmt = conn.prepareStatement(SqlQueries.ADD_TO_PROFESSOR_COURSES);
+				stmt.setString(1, username);
+				stmt.setString(2,courseName);
+				stmt.setString(3, DateTimeDay.getDateTime());
 				stmt.executeUpdate();
 				return "added";
 			}

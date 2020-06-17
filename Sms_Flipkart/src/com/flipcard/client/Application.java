@@ -84,10 +84,15 @@ public class Application {
 					logger.info("\nBelow are the available courses\n");
 					studentOperation.fetchCourseNames();
 					logger.info("Enter the course Name you want to add");
-					courseName=sc.next();
+					courseName=sc.next();		
+					logger.info("Enter the payment mode\n");
+					logger.info("1. Debit card");
+					logger.info("2. Net banking");
+					logger.info("3. UPI");
+					int paymentMode=sc.nextInt();
 					try {
 						// Check if course is valid or not if valid then register the student for it
-						studentOperation.addCourse(courseName);
+						studentOperation.addCourse(courseName,paymentMode);
 
 					} catch (InvalidCourseException e) {
 

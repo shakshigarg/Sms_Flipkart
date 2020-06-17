@@ -36,7 +36,7 @@ public class DBUtils {
             	Properties prop = new Properties();
             	
             	// Take properties from config file
-                InputStream inputStream = DBUtils.class.getClassLoader().getResourceAsStream("config.properties");
+                InputStream inputStream = DBUtils.class.getClassLoader().getResourceAsStream("configure.properties");
                 prop.load(inputStream);
                 String driver = prop.getProperty("driver");
                 String url = prop.getProperty("url");

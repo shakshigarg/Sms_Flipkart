@@ -74,7 +74,7 @@ public class ProfessorService implements ProfessorServiceInterface {
 		boolean valid=courseUpdateObject.verifyCourse(courseName);
 		if(valid) {
 			
-			// If course is valid then give course adde successfully
+			// If course is valid then give course added successfully
 			String message=courseUpdateObject.addCourseToTeach(username,courseName);
 			if(message.equalsIgnoreCase("added")) {
 				logger.info("Course Added Successfully on "+DateTimeDay.getDateTime());

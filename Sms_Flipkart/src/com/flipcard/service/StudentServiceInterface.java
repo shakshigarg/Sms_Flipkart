@@ -15,7 +15,7 @@ public interface StudentServiceInterface {
 	public void fetchCourseNames();
 	
 	// register student for a course
-	void addCourse(String courseName) throws InvalidCourseException, AlreadyRegisteredException;
+	void addCourse(String courseName, int paymentMode) throws InvalidCourseException, AlreadyRegisteredException;
 	
 	// Fetch all registered courses by student
 	public void fetchRegisteredCourses();

@@ -18,7 +18,7 @@ public class SqlQueries {
 	public static String VERIFY_COURSE="SELECT * FROM CATALOG WHERE COURSENAME=?";
 	
 	// Add new course to student courses
-	public static String ADD_NEW_COURSE="INSERT INTO REGISTRATION VALUES (?,?,?)";
+	public static String ADD_NEW_COURSE="INSERT INTO REGISTRATION VALUES (?,?,?,?)";
 	
 	// Drop registered course
 	public static String DROP_COURSE="DELETE FROM REGISTRATION WHERE USERNAME=? AND COURSENAME=?";
@@ -106,4 +106,9 @@ public class SqlQueries {
 	// Drop course from grades
 	public static String DROP_FROM_GRADES="DELETE FROM GRADES WHERE USERNAME=? AND COURSE=?";
 	
+	public static String ADD_TO_PROFESSOR_COURSES="INSERT INTO PROFESSORCOURSES VALUES(?,?,?)";
+	
+	public static String CHECK_IF_REGISTERED="SELECT * FROM REGISTRATION WHERE USERNAME=? AND COURSENAME=?";
+	public static String PAY="INSERT INTO PAYMENT(PAYMENTMODE,DESCRIPTION) VALUES(?,?)";
+	public static String GET_PAYMENT_ID="SELECT * FROM PAYMENT WHERE PAYMENTMODE=? AND DESCRIPTION=?";
 }
