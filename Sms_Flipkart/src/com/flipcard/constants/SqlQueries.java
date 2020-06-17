@@ -106,9 +106,15 @@ public class SqlQueries {
 	// Drop course from grades
 	public static String DROP_FROM_GRADES="DELETE FROM GRADES WHERE USERNAME=? AND COURSE=?";
 	
+	// Add in professor courses table
 	public static String ADD_TO_PROFESSOR_COURSES="INSERT INTO PROFESSORCOURSES VALUES(?,?,?)";
 	
+	// Check if student is already registered for course
 	public static String CHECK_IF_REGISTERED="SELECT * FROM REGISTRATION WHERE USERNAME=? AND COURSENAME=?";
+	
+	// Store the payment status
 	public static String PAY="INSERT INTO PAYMENT(PAYMENTMODE,DESCRIPTION) VALUES(?,?)";
-	public static String GET_PAYMENT_ID="SELECT * FROM PAYMENT WHERE PAYMENTMODE=? AND DESCRIPTION=?";
+	
+	// Get the payment Id
+	public static String GET_PAYMENT_ID="SELECT paymentId FROM PAYMENT WHERE PAYMENTMODE=? AND DESCRIPTION=?";
 }

@@ -78,31 +78,34 @@ public class CourseUpdation implements CourseUpdationInterface {
 			stmt.setInt(1,paymentMode);
 			stmt.setString(2, username+","+courseName);
 			int rows=stmt.executeUpdate();
-			System.out.println(rows);
+			
+			
 			stmt = conn.prepareStatement(SqlQueries.GET_PAYMENT_ID);
 			stmt.setInt(1,paymentMode);
 			stmt.setString(2, username+","+courseName);
 			ResultSet rs_new=stmt.executeQuery();
-			
-			// Run SQL query to register for new course
-			stmt = conn.prepareStatement(SqlQueries.ADD_NEW_COURSE);
-			stmt.setString(1,username);
-			stmt.setString(2, courseName);
-			stmt.setString(3,DateTimeDay.getDateTime());
-			stmt.setInt(4, rs_new.getInt("paymentId"));
-			stmt.executeUpdate();
+			if(rs_new.next())
+			{
+				// Run SQL query to register for new course
+				stmt = conn.prepareStatement(SqlQueries.ADD_NEW_COURSE);
+				stmt.setString(1,username);
+				stmt.setString(2, courseName);
+				stmt.setString(3,DateTimeDay.getDateTime());
+				stmt.setInt(4, rs_new.getInt("paymentId"));
+				stmt.executeUpdate();
 
-			stmt = conn.prepareStatement(SqlQueries.INCREASE_COUNT_OF_COURSES);
-			stmt.setString(1, username);
-			stmt.executeUpdate();
-			
-			stmt = conn.prepareStatement(SqlQueries.ADD_TO_GRADES);
-			stmt.setString(1,username);
-			stmt.setString(2, courseName);
-			stmt.setString(3, "");
-			stmt.executeUpdate();
-			
-			return true;
+				stmt = conn.prepareStatement(SqlQueries.INCREASE_COUNT_OF_COURSES);
+				stmt.setString(1, username);
+				stmt.executeUpdate();
+				
+				stmt = conn.prepareStatement(SqlQueries.ADD_TO_GRADES);
+				stmt.setString(1,username);
+				stmt.setString(2, courseName);
+				stmt.setString(3, "");
+				stmt.executeUpdate();
+				
+				return true;
+			}
 		}
 		catch(SQLIntegrityConstraintViolationException error) {
 			// Give message if SQl query give an error

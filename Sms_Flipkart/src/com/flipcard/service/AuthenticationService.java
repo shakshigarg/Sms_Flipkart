@@ -11,7 +11,7 @@ import com.flipcard.exception.InvalidAuthenticationException;
  * This service is used for login and logout
  * Checks if authentication credentials are valid or not
  */
-public class AuthenticationService implements AuthenticationServiceInterface{
+public class AuthenticationService{
 	
 	private static AuthCredentials authDao=new AuthCredentials();
 	

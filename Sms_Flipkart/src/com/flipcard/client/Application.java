@@ -46,7 +46,7 @@ public class Application {
 				username=sc.next();
 				password=sc.next();
 
-				// Check whether the usernameand password is valid or not
+				// Check whether the username and password is valid or not
 				role=AuthenticationService.checkIdentity(username, password);
 			}catch(InvalidAuthenticationException e) {
 				// Exception thrown if invalid username and password
@@ -68,7 +68,7 @@ public class Application {
 				// Displays all the functionality for Student
 				logger.info("-----------Menu----------");
 				logger.info("1. Fetch Catalog Courses");
-				logger.info("2. Add Course");
+				logger.info("2. Register for Course");
 				logger.info("3. Drop Course");
 				logger.info("4. Get Report Card");
 				logger.info("5. Logout");

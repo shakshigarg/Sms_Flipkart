@@ -5,7 +5,7 @@ package com.flipcard.DAO;
  */
 public interface AuthCredentialsInterface {
 	
-	// Check if username and password is valid or not
+	// Check if user name and password is valid or not
 	public String checkIdentity(String username,String password);
 	
 	// Logout
